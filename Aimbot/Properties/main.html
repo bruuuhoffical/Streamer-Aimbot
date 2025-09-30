@@ -1,0 +1,1035 @@
+<!DOCTYPE html>
+
+<html lang="en">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1" />
+    <title>BRUUUH CHEATS</title>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600&display=swap" rel="stylesheet">
+    <script src="https://cdn.jsdelivr.net/npm/particles.js@2.0.0/particles.min.js"></script>
+    <style>
+        :root {
+            --bg1: #0b0f1a;
+            --bg2: #12172a;
+            --glass: rgba(255,255,255,.06);
+            --stroke: rgba(255,255,255,.10);
+            --grad1: #8b5cf6;
+            --grad2: #22d3ee;
+            --grad3: #ff6b6b;
+            --text: #e5e7eb;
+            --muted: #9ca3af;
+            --accent: #7c3aed;
+            --ok: #10b981;
+            --warn: #f59e0b;
+            --err: #ef4444;
+        }
+
+        * {
+            box-sizing: border-box;
+            -webkit-tap-highlight-color: transparent
+        }
+
+        html, body {
+            height: 100%
+        }
+
+        body {
+            margin: 0;
+            font-family: Poppins,system-ui,Segoe UI,Arial;
+            color: var(--text);
+            background: radial-gradient(900px 600px at 110% -10%, rgba(34,211,238,.20), transparent 60%), radial-gradient(900px 600px at -10% 110%, rgba(139,92,246,.20), transparent 60%), linear-gradient(135deg,var(--bg1),var(--bg2));
+            overflow-x: hidden;
+        }
+
+        @media (min-height: 800px) {
+            body {
+                overflow-y: hidden;
+            }
+
+            .container {
+                height: 100vh;
+                overflow-y: auto;
+            }
+
+            .console-wrap {
+                position: sticky;
+                bottom: 0;
+                background: var(--bg1);
+                border-top: 1px solid var(--stroke);
+            }
+        }
+
+        #particles-js {
+            position: fixed;
+            inset: 0;
+            z-index: -1
+        }
+
+        .container {
+            width: 100%;
+            max-width: 420px;
+            margin: 12px auto 24px;
+            padding: 12px
+        }
+
+        .card {
+            background: linear-gradient(180deg,var(--glass), rgba(255,255,255,.03));
+            border: 1px solid var(--stroke);
+            border-radius: 16px;
+            box-shadow: 0 12px 32px rgba(0,0,0,.35);
+            backdrop-filter: blur(10px);
+            overflow: hidden
+        }
+
+        .header {
+            padding: 14px 16px 8px;
+            text-align: center
+        }
+
+        .brand {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 10px
+        }
+
+        .dot {
+            width: 10px;
+            height: 10px;
+            border-radius: 50%;
+            background: linear-gradient(45deg,var(--grad1),var(--grad2));
+            box-shadow: 0 0 22px rgba(139,92,246,.7)
+        }
+
+        h2 {
+            font-size: 20px;
+            margin: 0
+        }
+
+        h3 {
+            font-size: 12px;
+            margin: 6px 0 0;
+            color: var(--muted);
+            font-weight: 500
+        }
+
+        .status {
+            margin: 10px 16px;
+            padding: 10px 12px;
+            border-radius: 12px;
+            border: 1px dashed var(--stroke);
+            display: flex;
+            flex-direction: column;
+            gap: 4px;
+            font-size: 12px;
+            background: rgba(0,0,0,.15)
+        }
+
+            .status .online {
+                color: var(--ok);
+                font-weight: 700
+            }
+
+        .row {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 10px;
+            padding: 10px 12px;
+            border-top: 1px solid var(--stroke);
+            background: rgba(0,0,0,.08)
+        }
+
+            .row:first-of-type {
+                border-top: 1px solid var(--stroke)
+            }
+
+            .row label {
+                font-size: 13px
+            }
+
+        .tabs {
+            display: flex;
+            width: 100%
+        }
+
+            .tabs button {
+                flex: 1;
+                padding: 12px;
+                border: none;
+                background: transparent;
+                color: #cbd5e1;
+                border-bottom: 2px solid transparent;
+                font-weight: 600;
+                cursor: pointer
+            }
+
+                .tabs button.active {
+                    color: #fff;
+                    border-bottom-color: var(--grad2);
+                    background: linear-gradient(180deg,rgba(255,255,255,.06),transparent)
+                }
+
+        .tab-content {
+            display: none;
+            padding: 12px
+        }
+
+            .tab-content.active {
+                display: block
+            }
+
+        .panel {
+            border: 1px solid var(--stroke);
+            border-radius: 12px;
+            padding: 12px;
+            margin: 10px 0;
+            background: rgba(0,0,0,.10);
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 10px;
+        }
+
+        .panel-col {
+            display: flex;
+            flex-direction: column;
+            align-items: stretch;
+            gap: 12px;
+        }
+
+        .panel .stack {
+            display: flex;
+            flex-direction: column;
+            gap: 4px;
+            flex: 1;
+        }
+
+        .panel .btn, .panel .btn.ghost {
+            min-width: 60px;
+            text-align: center;
+        }
+
+        .panel .btn-group {
+            display: flex;
+            gap: 8px;
+        }
+
+        .panel-actions {
+            display: flex;
+            gap: 8px;
+            justify-content: flex-end;
+        }
+
+        .title {
+            font-size: 14px;
+            font-weight: 600
+        }
+
+        .hint {
+            font-size: 11px;
+            color: #9ca3af
+        }
+
+        .btn {
+            padding: 10px 14px;
+            border: none;
+            border-radius: 12px;
+            font-weight: 700;
+            font-size: 13px;
+            cursor: pointer;
+            background: linear-gradient(45deg,var(--grad1),var(--grad2));
+            color: #fff;
+            box-shadow: 0 10px 22px rgba(34,211,238,.25)
+        }
+
+            .btn.ghost {
+                background: transparent;
+                color: #e2e8f0;
+                border: 1px solid rgba(255,255,255,.18);
+                box-shadow: none
+            }
+
+        .console-wrap {
+            padding: 0;
+            background: linear-gradient(rgba(17, 17, 17, 0.03));
+            border: 1px solid var(--stroke);
+            border-radius: 16px;
+            margin: 12px;
+            box-shadow: 0 8px 24px rgba(0,0,0,.25);
+            backdrop-filter: blur(10px);
+            overflow: hidden
+        }
+
+        .console {
+            height: 200px;
+            overflow: auto;
+            padding: 16px;
+            font-family: ui-monospace,Consolas,Menlo,monospace;
+            background: transparent;
+            color: #e5e7eb;
+            border: none;
+            white-space: pre-wrap;
+            font-size: 13px;
+            line-height: 1.4
+        }
+
+            .console::-webkit-scrollbar {
+                width: 6px
+            }
+
+            .console::-webkit-scrollbar-track {
+                background: rgba(0,0,0,.2);
+                border-radius: 3px
+            }
+
+            .console::-webkit-scrollbar-thumb {
+                background: linear-gradient(45deg,var(--grad1),var(--grad2));
+                border-radius: 3px
+            }
+
+                .console::-webkit-scrollbar-thumb:hover {
+                    background: linear-gradient(45deg,var(--grad2),var(--grad1))
+                }
+
+        .console-head {
+            position: relative;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 12px 16px;
+            background: linear-gradient(90deg, rgba(139,92,246,.08), rgba(34,211,238,.08));
+            border-bottom: 1px solid rgba(255,255,255,.1);
+            margin-bottom: 0;
+            font-weight: 600;
+            font-size: 14px;
+            color: var(--text)
+        }
+
+        .console-clear {
+            background: transparent;
+            border: 1px solid rgba(255,255,255,.15);
+            color: var(--muted);
+            font-size: 11px;
+            cursor: pointer;
+            padding: 4px 8px;
+            border-radius: 6px;
+            transition: all 0.2s ease;
+            display: flex;
+            align-items: center;
+            gap: 4px
+        }
+
+            .console-clear:hover {
+                color: var(--warn);
+                border-color: var(--warn);
+                background: rgba(245,158,11,.08)
+            }
+
+        .line {
+            padding: 3px 0;
+            border-bottom: 1px solid rgba(255,255,255,.03);
+            transition: all 0.15s ease;
+            margin: 1px 0;
+            padding-left: 6px
+        }
+
+            .line:hover {
+                background: rgba(255,255,255,.02);
+                padding-left: 8px
+            }
+
+        .ok {
+            color: var(--ok);
+            font-weight: 500
+        }
+
+        .warn {
+            color: var(--warn);
+            font-weight: 500
+        }
+
+        .err {
+            color: var(--err);
+            font-weight: 500
+        }
+
+        .line.ok {
+            border-left: 3px solid var(--ok);
+            background: rgba(16,185,129,.05)
+        }
+
+        .line.warn {
+            border-left: 3px solid var(--warn);
+            background: rgba(245,158,11,.05)
+        }
+
+        .line.err {
+            border-left: 3px solid var(--err);
+            background: rgba(239,68,68,.05)
+        }
+
+        .seg {
+            display: flex;
+            gap: 0;
+            border: 1px solid rgba(255,255,255,.16);
+            border-radius: 10px;
+            overflow: hidden;
+            background: rgba(255,255,255,.02)
+        }
+
+            .seg button {
+                appearance: none;
+                border: none;
+                padding: 9px 14px;
+                font-weight: 600;
+                font-size: 13px;
+                color: #dbeafe;
+                background: transparent;
+                cursor: pointer
+            }
+
+                .seg button.active {
+                    background: linear-gradient(90deg,var(--grad1),var(--grad2));
+                    color: #fff
+                }
+
+        .combo {
+            position: relative;
+            width: 100%;
+            max-width: 260px
+        }
+
+        #scan-trigger-combo {
+            max-width: 170px
+        }
+
+        .combo-trigger {
+            width: 100%;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 10px;
+            padding: 10px 12px;
+            border-radius: 12px;
+            border: 1px solid rgba(255,255,255,.16);
+            background: linear-gradient(45deg, rgba(139,92,246,.18), rgba(34,211,238,.18)) padding-box, linear-gradient(45deg, rgba(255,255,255,.10), rgba(255,255,255,.04)) border-box;
+            color: #fff;
+            font-weight: 700;
+            cursor: pointer;
+            box-shadow: 0 8px 18px rgba(34,211,238,.15)
+        }
+
+            .combo-trigger svg {
+                width: 16px;
+                height: 16px;
+                opacity: .9
+            }
+
+        .combo.open .combo-trigger {
+            box-shadow: 0 0 0 2px rgba(124,58,237,.25), 0 12px 26px rgba(0,0,0,.4)
+        }
+
+        .combo-menu {
+            position: absolute;
+            left: 0;
+            right: 0;
+            top: calc(100% + 8px);
+            z-index: 20;
+            display: none;
+            background: linear-gradient(180deg, rgba(12,16,26,.96), rgba(12,16,26,.92));
+            border: 1px solid rgba(255,255,255,.16);
+            border-radius: 12px;
+            overflow: hidden;
+            max-height: 240px;
+            overflow-y: auto;
+            box-shadow: 0 18px 40px rgba(0,0,0,.5), inset 0 1px 0 rgba(255,255,255,.04);
+            backdrop-filter: blur(8px)
+        }
+
+        .combo.open .combo-menu {
+            display: block
+        }
+
+        .combo-option {
+            width: 100%;
+            text-align: left;
+            padding: 12px 14px;
+            background: transparent;
+            border: none;
+            color: #dbeafe;
+            font-weight: 600;
+            font-size: 13px;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: space-between
+        }
+
+            .combo-option:hover {
+                background: linear-gradient(90deg, rgba(139,92,246,.18), rgba(34,211,238,.18));
+                color: #fff
+            }
+
+            .combo-option.selected {
+                background: linear-gradient(90deg, rgba(139,92,246,.28), rgba(34,211,238,.28));
+                color: #fff
+            }
+    </style>
+</head>
+<body>
+    <div id="particles-js"></div>
+    <div class="container">
+        <div class="card">
+            <div class="header">
+                <div class="brand"><div class="dot"></div><h2>BRUUUH CHEATS</h2></div>
+                <h3>Streamers Choice Version 3.2</h3>
+            </div>
+
+            <div class="status">
+                <div>Status: <span class="online">Online</span> • V3.2</div>
+                <div>Connected to: Emulator</div>
+            </div>
+
+            <div class="row">
+                <label>Emulator Architecture</label>
+                <div class="seg" id="mode-seg">
+                    <button type="button" class="active" data-type="32-Bit">32-Bit</button>
+                    <button type="button" data-type="64-Bit">64-Bit</button>
+                </div>
+            </div>
+
+
+            <div class="tabs">
+                <button class="active" data-tab="tab-aimbot">Headshot</button>
+                <button data-tab="tab-visuals">Visuals</button>
+                <button data-tab="tab-sniper">Sniper</button>
+                <button data-tab="tab-extras">Extras</button>
+                <button data-tab="tab-settings">Settings</button>
+            </div>
+
+            <div class="tab-content active" id="tab-aimbot">
+
+                <div class="panel">
+                    <div class="stack">
+                        <div class="title">Aimbot Mode</div>
+                        <div class="hint">Select Aimbot Type</div>
+                    </div>
+                    <div style="display:flex; gap:10px; align-items:center; justify-content:flex-end; width:50%">
+                        <div class="combo" id="emu-combo">
+                            <button class="combo-trigger" id="emu-trigger" aria-haspopup="listbox" aria-expanded="false">
+                                <span id="emu-label">Aimbot Head</span>
+                                <svg viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M7 10l5 5 5-5" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" /></svg>
+                            </button>
+                            <div class="combo-menu" id="emu-menu" role="listbox">
+                                <button class="combo-option selected" role="option" data-value="aimbotenable">Aimbot Head</button>
+                                <button class="combo-option" role="option" data-value="aimDrag">Aimbot Drag</button>
+                                <button class="combo-option" role="option" data-value="aimDragPro">Aimbot Drag Pro</button>
+                                <button class="combo-option" role="option" data-value="aimAI">Aimbot AI</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="panel">
+                    <div class="stack"><div class="title">Aimbot Switch</div><div class="hint">Turn aimbot ON/OFF</div></div>
+                    <div style="display:flex; gap:8px">
+                        <button class="btn" id="aimbot-on-btn" data-cmd="aimbotheadon">ON</button>
+                        <button class="btn ghost" id="aimbot-off-btn" data-cmd="aimbotheadoff">OFF</button>
+                    </div>
+                </div>
+
+                <div class="panel">
+                    <div class="stack"><div class="title">No Recoil</div><div class="hint">Reduces Weapons Recoil by 99.999%</div></div>
+                    <button class="btn" data-cmd="norecoilon">On</button>
+                    <button class="btn" data-cmd="norecoiloff">Off</button>
+                </div>
+
+                <div class="panel">
+                    <div class="stack"><div class="title">Scope Tracking 2X</div><div class="hint">Tracks Enemy on Scope Weapons</div></div>
+                    <button class="btn" data-cmd="scopetracking2x">On</button>
+                    <button class="btn" data-cmd="scopetrackingoff2x">Off</button>
+                </div>
+                <div class="panel">
+                    <div class="stack"><div class="title">Scope Tracking 4X</div><div class="hint">Tracks Enemy on Scope Weapons</div></div>
+                    <button class="btn" data-cmd="scopetracking4x">On</button>
+                    <button class="btn" data-cmd="scopetrackingoff4x">Off</button>
+                </div>
+            </div>
+
+            <div class="tab-content active" id="tab-visuals">
+
+                <div class="panel">
+                    <div class="stack"><div class="title">Chams Menu V1</div><div class="hint">Modern Chams Menu UI for enemy location</div></div>
+                    <button class="btn" data-cmd="chamsmenunew">Inject</button>
+                </div>
+
+                <div class="panel">
+                    <div class="stack"><div class="title">Chams Menu V2</div><div class="hint">Old Chams Menu UI for enemy location</div></div>
+                    <button class="btn" data-cmd="chamsmenuold">Inject</button>
+                </div>
+                <div class="panel">
+                    <div class="stack"><div class="title">Chams 3D</div><div class="hint">Make Enemies Visible Through Walls</div></div>
+                    <button class="btn" data-cmd="chams3d">Inject</button>
+                </div>
+                <div class="panel">
+                    <div class="stack"><div class="title">Chams Moco</div><div class="hint">Spawn a Glowing Arrow on Enemies Head</div></div>
+                    <button class="btn" data-cmd="chamsmoco">Inject</button>
+                </div>
+            </div>
+
+            <div class="tab-content active" id="tab-sniper">
+
+                <div class="panel">
+                    <div class="stack"><div class="title">Sniper Aim ⚠️</div><div class="hint">Turns Sniper to AR Weapoon</div></div>
+                    <button class="btn" data-cmd="sniperaimon">On</button>
+                    <button class="btn" data-cmd="sniperaimoff">Off</button>
+                </div>
+
+                <div class="panel">
+                    <div class="stack"><div class="title">Sniper Switch ⚠️</div><div class="hint">Reduce Sniper Switch Time</div></div>
+                    <button class="btn" data-cmd="sniperswitchon">On</button>
+                    <button class="btn" data-cmd="sniperswitchoff">Off</button>
+                </div>
+                <div class="panel">
+                    <div class="stack"><div class="title">Sniper Location [AWMY]</div><div class="hint">Shows Sniper and Sniper Ammo Location</div></div>
+                    <button class="btn" data-cmd="awmylocationon">On</button>
+                    <button class="btn" data-cmd="awmylocationoff">Off</button>
+                </div>
+                <div class="panel">
+                    <div class="stack"><div class="title">Sniper Location [M82B]</div><div class="hint">Shows Sniper and Sniper Ammo Location</div></div>
+                    <button class="btn" data-cmd="m82blocationon">On</button>
+                    <button class="btn" data-cmd="m82blocationoff">Off</button>
+                </div>
+                <div class="panel">
+                    <div class="stack"><div class="title">Sniper Location [M24]</div><div class="hint">Shows Sniper and Sniper Ammo Location</div></div>
+                    <button class="btn" data-cmd="m24locationon">On</button>
+                    <button class="btn" data-cmd="m24locationoff">Off</button>
+                </div>
+                <div class="panel">
+                    <div class="stack"><div class="title">Sniper Location [VSK]</div><div class="hint">Shows Sniper and Sniper Ammo Location</div></div>
+                    <button class="btn" data-cmd="vsklocationon">On</button>
+                    <button class="btn" data-cmd="vsklocationoff">Off</button>
+                </div>
+            </div>
+
+            <div class="tab-content active" id="tab-extras">
+
+                <div class="panel">
+                    <div class="stack"><div class="title">Aim Fov [90]</div><div class="hint">Aim At Nearest Enemy within 90 Degree on Shoot</div></div>
+                    <button class="btn" data-cmd="aimfovon">On</button>
+                    <button class="btn" data-cmd="aimfovoff">Off</button>
+                </div>
+
+                <div class="panel">
+                    <div class="stack"><div class="title">Wall Hack</div><div class="hint">Walk or Sprint Through Walls</div></div>
+                    <button class="btn" data-cmd="wallload">Load</button>
+                    <button class="btn" data-cmd="wallon">On</button>
+                    <button class="btn" data-cmd="walloff">Off</button>
+                </div>
+                
+                <div class="panel">
+                    <div class="stack"><div class="title">Speed Hack</div><div class="hint">Increase Movement Speed</div></div>
+                    <button class="btn" data-cmd="speedload">Load</button>
+                    <button class="btn" data-cmd="speedon">On</button>
+                    <button class="btn" data-cmd="speedoff">Off</button>
+                </div>
+
+                <div class="panel">
+                    <div class="stack"><div class="title">Reset Guest</div><div class="hint">Reset Guest account without reinstalling game</div></div>
+                    <button class="btn" data-cmd="resetguest">Reset</button>
+                </div>
+
+            </div>
+
+            <div class="tab-content" id="tab-settings">
+                <div class="panel" id="global-input-device-panel">
+                    <div class="stack">
+                        <div class="title">Input Device</div>
+                        <div class="hint">Switch once — all hotkey pickers update</div>
+                    </div>
+                    <div class="seg" id="input-device-seg">
+                        <button type="button" class="active" data-type="keyboard">Keyboard</button>
+                        <button type="button" data-type="mouse">Mouse</button>
+                    </div>
+                </div>
+
+                <div class="panel">
+                    <div class="stack">
+                        <div class="title">Scan Aimbot Hotkey</div>
+                        <div class="hint">Choose trigger</div>
+                    </div>
+                    <div style="display:flex; align-items:center; gap:8px; justify-content:flex-end; width:50%">
+                        <div class="combo hotkey-combo" data-index="2">
+                            <button class="combo-trigger" aria-haspopup="listbox" aria-expanded="false">
+                                <span class="combo-label">None</span>
+                                <svg viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M7 10l5 5 5-5" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" /></svg>
+                            </button>
+                            <div class="combo-menu" role="listbox"></div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="panel">
+                    <div class="stack">
+                        <div class="title">Aimbot Hotkey</div>
+                        <div class="hint">Bind a key to Change Mode</div>
+                    </div>
+                    <div style="display:flex; align-items:center; gap:8px; justify-content:flex-end; width:50%">
+                        <div class="combo hotkey-combo" data-index="3">
+                            <button class="combo-trigger" aria-haspopup="listbox" aria-expanded="false">
+                                <span class="combo-label">None</span>
+                                <svg viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M7 10l5 5 5-5" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" /></svg>
+                            </button>
+                            <div class="combo-menu" role="listbox"></div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="panel">
+                    <div class="stack"><div class="title">Clear Console</div><div class="hint">Remove previous logs</div></div>
+                    <button class="btn ghost" id="clear-log">Clear</button>
+                </div>
+
+                <div class="panel">
+                    <div class="stack"><div class="title">Exit Application</div><div class="hint">Shutdown this current application</div></div>
+                    <button class="btn" data-cmd="exit">Exit</button>
+                </div>
+
+                <div class="panel">
+                    <div class="stack"><div class="title">Restart Application</div><div class="hint">Restart this current application</div></div>
+                    <button class="btn" data-cmd="exit">Restart</button>
+                </div>
+            </div>
+
+
+
+            <div class="console-wrap">
+                <div class="console-head">
+                    <div style="display:flex; align-items:center; gap:8px;">
+                        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" style="color:var(--grad2);">
+                            <rect x="2" y="3" width="20" height="14" rx="2" ry="2" stroke="currentColor" stroke-width="2" />
+                            <line x1="8" y1="21" x2="16" y2="21" stroke="currentColor" stroke-width="2" />
+                            <line x1="12" y1="17" x2="12" y2="21" stroke="currentColor" stroke-width="2" />
+                        </svg>
+                        Console
+                    </div>
+                    <button class="console-clear" id="console-clear" title="Clear Console">
+                        <svg width="12" height="12" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                            <path d="M3 6h18M8 6V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" />
+                        </svg>
+                        Clear
+                    </button>
+                </div>
+                <div class="console" id="log"></div>
+            </div>
+        </div>
+
+    </div>
+    <script>
+        particlesJS('particles-js', { particles: { number: { value: 70 }, size: { value: 2.3 }, move: { speed: 1.6 } } });
+
+        const $ = s => document.querySelector(s);
+        const $$ = s => Array.from(document.querySelectorAll(s));
+        const logEl = $('#log');
+
+        function log(text, cls) {
+            const line = document.createElement('div');
+            line.className = 'line' + (cls ? ' ' + cls : '');
+            const t = new Date().toLocaleTimeString(undefined, { hour12: false });
+            line.textContent = `[${t}] ${text}`;
+            logEl.appendChild(line);
+            logEl.scrollTop = logEl.scrollHeight;
+            while (logEl.children.length > 120) logEl.removeChild(logEl.firstChild);
+        }
+
+        //function sendCommand(cmd, { quietNetworkError = true } = {}) {
+        //  log(`Please Wait...`);
+        //  fetch(window.location.origin + '/', { method: 'POST', body: cmd })
+        //    .then(r => r.text())
+        //    .then(() => {
+        //      if (cmd === 'aimbotenable') log('Headshot Enabled : Head', 'ok');
+        //      if (cmd === 'enableAimDrag') log('Headshot Enabled : Drag', 'ok');
+        //      if (cmd === 'enableAimDragPro') log('Headshot Enabled : Drag Pro ', 'ok');
+        //      if (cmd === 'aimbotscan') log('Scan Complete', 'ok');
+        //      if (cmd === 'aimbotenable') log('Headshot Enabled', 'ok');
+        //      if (cmd === 'aimbotdisable') log('Headshot Disabled', 'warn');
+
+        //      if (cmd === 'EnableNoRecoil') log('No Recoil Enabled', 'ok');
+        //      if (cmd === 'DisableNoRecoil') log('No Recoil Disabled', 'warn');
+        //      if (cmd === 'EnableScopeTracking2X') log('Scope Tracking 2X Enabled', 'ok');
+        //      if (cmd === 'DisableScopeTracking2X') log('Scope Tracking 2X Disabled', 'warn');
+
+
+        //      if (cmd === 'SetArch') log(`Emulator Architecture synced`, 'ok');
+        //      if (cmd.startsWith('Enable')) log(`${cmd} sent`, 'ok');
+        //      if (cmd.startsWith('Disable')) log(`${cmd} sent`, 'warn');
+        //    })
+        //    .catch(() => {
+        //      if (!quietNetworkError) log('Network error while sending command', 'err');
+        //      else log('No server connection detected', 'warn');
+        //    });
+        //}
+        function sendCommand(cmd, { quietNetworkError = true } = {}) {
+            log(`Please Wait...`);
+            fetch(window.location.origin + '/', { method: 'POST', body: cmd })
+                .then(r => r.text())
+                .then((feedback) => {
+                    if (feedback && feedback.trim().length > 0) {
+                        let cl = '';
+                        if (/error|fail|unknown|not\s+found|invalid/i.test(feedback)) cl = 'err';
+                        else if (/disabled|off|clear/i.test(feedback)) cl = 'warn';
+                        else if (/enabled|saved|scan|success|ok/i.test(feedback)) cl = 'ok';
+                        log(feedback, cl);
+                    } else {
+                        if (cmd === 'aimbotenable') log('Headshot Enabled : Head', 'ok');
+                        if (cmd === 'enableAimDrag') log('Headshot Enabled : Drag', 'ok');
+                        if (cmd === 'enableAimDragPro') log('Headshot Enabled : Drag Pro ', 'ok');
+                        if (cmd === 'aimbotscan') log('Scan Complete', 'ok');
+                        if (cmd === 'aimbotdisable') log('Headshot Disabled', 'warn');
+                        if (cmd === 'EnableNoRecoil') log('No Recoil Enabled', 'ok');
+                        if (cmd === 'DisableNoRecoil') log('No Recoil Disabled', 'warn');
+                        if (cmd === 'EnableScopeTracking2X') log('Scope Tracking 2X Enabled', 'ok');
+                        if (cmd === 'DisableScopeTracking2X') log('Scope Tracking 2X Disabled', 'warn');
+                        if (cmd === 'SetArch') log(`Emulator Architecture synced`, 'ok');
+                        if (cmd.startsWith('Enable')) log(`${cmd} sent`, 'ok');
+                        if (cmd.startsWith('Disable')) log(`${cmd} sent`, 'warn');
+                    }
+                })
+                .catch(() => {
+                    if (!quietNetworkError) log('Network error while sending command', 'err');
+                    else log('No server connection detected', 'warn');
+                });
+        }
+
+        function renderStatus(online, connectedTo, pid) {
+            const statusRoot = document.querySelector('.status');
+            if (!statusRoot) return;
+
+            const line1 = statusRoot.querySelector('div:nth-child(1)');
+            const span = line1 ? line1.querySelector('span') : null;
+            if (span) {
+                span.textContent = online ? 'Online' : 'Offline';
+                span.className = online ? 'online' : 'err';
+            }
+
+            const line2 = statusRoot.querySelector('div:nth-child(2)');
+            if (line2) {
+                if (online) line2.textContent = 'Connected to: ' + (connectedTo || 'HD-Player') + ' - PID: ' + (pid || 0);
+                else line2.textContent = 'Connected to: None';
+            }
+        }
+
+        function fetchStatus() {
+            return fetch(window.location.origin + '/status', { method: 'GET' })
+                .then(r => r.ok ? r.json() : Promise.reject())
+                .catch(() => {
+                    return fetch(window.location.origin + '/', { method: 'POST', body: 'getStatus' })
+                        .then(r => r.ok ? r.json() : Promise.reject());
+                });
+        }
+
+        setInterval(() => {
+            fetchStatus()
+                .then(data => renderStatus(data.online, data.connectedTo, data.pid))
+                .catch(err => {
+                    console.error('Status fetch failed:', err);
+                    renderStatus(false, null, 0);
+                });
+        }, 2500);
+
+        fetchStatus()
+            .then(data => renderStatus(data.online, data.connectedTo, data.pid))
+            .catch(err => {
+                console.error('Initial status fetch failed:', err);
+                renderStatus(false, null, 0);
+            });
+
+
+        $$('.tabs button').forEach(btn => {
+            btn.addEventListener('click', () => {
+                $$('.tabs button').forEach(b => b.classList.remove('active'));
+                btn.classList.add('active');
+                $$('.tab-content').forEach(t => t.classList.remove('active'));
+                document.getElementById(btn.dataset.tab).classList.add('active');
+            });
+        });
+
+
+        let emulatorArch = '32-Bit';
+        function setEmulatorArch(arch) {
+            emulatorArch = arch;
+            $$('#mode-seg button').forEach(x => { x.classList.toggle('active', x.dataset.type === arch); });
+        }
+        $$('#mode-seg button').forEach(b => {
+            b.addEventListener('click', () => { const arch = b.dataset.type || '32-Bit'; if (arch !== emulatorArch) setEmulatorArch(arch); });
+        });
+        setEmulatorArch(emulatorArch);
+
+        function initCombo(comboRoot) {
+            const trigger = comboRoot.querySelector('.combo-trigger');
+            const menu = comboRoot.querySelector('.combo-menu');
+            let labelEl = comboRoot.querySelector('.combo-label') || comboRoot.querySelector('#emu-label');
+            const open = () => { document.querySelectorAll('.combo.open').forEach(c => { if (c !== comboRoot) c.classList.remove('open'); }); comboRoot.classList.add('open'); trigger.setAttribute('aria-expanded', 'true'); };
+            const close = () => { comboRoot.classList.remove('open'); trigger.setAttribute('aria-expanded', 'false'); };
+            trigger.addEventListener('click', (e) => { e.stopPropagation(); comboRoot.classList.contains('open') ? close() : open(); });
+            menu.querySelectorAll('.combo-option').forEach(opt => {
+                opt.addEventListener('click', (e) => {
+                    e.stopPropagation();
+                    menu.querySelectorAll('.combo-option').forEach(o => o.classList.remove('selected'));
+                    opt.classList.add('selected');
+                    if (labelEl) labelEl.textContent = opt.textContent.trim();
+                    close();
+                    const parentTitle = comboRoot.closest('.panel')?.querySelector('.title')?.textContent?.trim();
+                    if (parentTitle === 'Aimbot Mode') {
+                        log(`Aimbot Mode >> ${opt.textContent.trim()}`, 'ok');
+                        // Update aimbot switch buttons when mode changes
+                        if (typeof updateAimbotSwitchButtons === 'function') {
+                            setTimeout(updateAimbotSwitchButtons, 10);
+                        }
+                    }
+                });
+            });
+            document.addEventListener('click', (e) => { if (!comboRoot.contains(e.target)) close(); });
+        }
+        document.querySelectorAll('.combo:not(.hotkey-combo)').forEach(initCombo);
+
+        const aimbotOnBtn = document.getElementById('aimbot-on-btn');
+        const aimbotOffBtn = document.getElementById('aimbot-off-btn');
+        const emuCombo = document.getElementById('emu-combo');
+
+        const aimbotCommandMap = {
+            'aimbotenable': 'aimbothead',
+            'aimDrag': 'aimbotdrag',
+            'aimDragPro': 'aimbotdragpro',
+            'aimAI': 'aimbotai'
+        };
+
+        function updateAimbotSwitchButtons() {
+            const selectedOption = emuCombo.querySelector('.combo-option.selected');
+            if (selectedOption) {
+                const selectedValue = selectedOption.getAttribute('data-value');
+                const commandPrefix = aimbotCommandMap[selectedValue] || 'aimbothead';
+
+                // Update the data-cmd attributes
+                aimbotOnBtn.setAttribute('data-cmd', commandPrefix + 'on');
+                aimbotOffBtn.setAttribute('data-cmd', commandPrefix + 'off');
+            }
+        }
+
+
+        updateAimbotSwitchButtons();
+
+        let inputDevice = 'keyboard';
+        function setInputDevice(next) {
+            inputDevice = next;
+            $$('#input-device-seg button').forEach(b => b.classList.toggle('active', b.dataset.type === inputDevice));
+            renderAllHotkeyMenus();
+            //log(`Hotkey input device: ${inputDevice}`, 'ok');
+        }
+        $$('#input-device-seg button').forEach(b => {
+            b.addEventListener('click', () => setInputDevice(b.dataset.type || 'keyboard'));
+        });
+        function makeKeyboardList() {
+            const out = ['None'];
+            const fkeys = Array.from({ length: 24 }, (_, i) => 'F' + (i + 1));
+            const letters = Array.from({ length: 26 }, (_, i) => String.fromCharCode(65 + i));
+            const nums = Array.from({ length: 10 }, (_, i) => i.toString());
+            const others = ['CTRL', 'ALT', 'SHIFT', 'TAB', 'ENTER', 'ESC', 'SPACE', 'BACKSPACE', 'INSERT', 'DELETE', 'HOME', 'END', 'PAGEUP', 'PAGEDOWN', 'LEFT', 'RIGHT', 'UP', 'DOWN'];
+            [fkeys, letters, nums, others].forEach(group => group.forEach(k => out.push(k)));
+            return out;
+        }
+        function makeMouseOptions() {
+            return [
+                { value: 'None', label: 'None' },
+                { value: 'LBUTTON', label: 'Left Button' },
+                { value: 'RBUTTON', label: 'Right Button' },
+                { value: 'MBUTTON', label: 'Middle Button' },
+                { value: 'X1', label: 'Mouse Button 4 (X1)' },
+                { value: 'X2', label: 'Mouse Button 5 (X2)' }
+            ];
+        }
+
+        function renderHotkeyMenu(comboRoot) {
+            const trigger = comboRoot.querySelector('.combo-trigger');
+            const labelEl = comboRoot.querySelector('.combo-label');
+            const menu = comboRoot.querySelector('.combo-menu');
+            const index = comboRoot.getAttribute('data-index');
+
+            menu.innerHTML = '';
+            labelEl.textContent = 'None';
+
+            const open = () => { document.querySelectorAll('.combo.open').forEach(c => { if (c !== comboRoot) c.classList.remove('open'); }); comboRoot.classList.add('open'); trigger.setAttribute('aria-expanded', 'true'); };
+            const close = () => { comboRoot.classList.remove('open'); trigger.setAttribute('aria-expanded', 'false'); };
+            trigger.onclick = (e) => { e.stopPropagation(); comboRoot.classList.contains('open') ? close() : open(); };
+            document.addEventListener('click', (e) => { if (!comboRoot.contains(e.target)) close(); });
+
+            if (inputDevice === 'keyboard') {
+                const items = makeKeyboardList();
+                items.forEach(val => {
+                    const btn = document.createElement('button');
+                    btn.className = 'combo-option' + (val === 'None' ? ' selected' : '');
+                    btn.setAttribute('role', 'option');
+                    btn.dataset.value = val;
+                    btn.textContent = val;
+                    btn.addEventListener('click', (e) => {
+                        e.stopPropagation();
+                        menu.querySelectorAll('.combo-option').forEach(o => o.classList.remove('selected'));
+                        btn.classList.add('selected');
+                        labelEl.textContent = val;
+                        close();
+                        if (val === 'None') {
+                            sendCommand(`clearHotkey:${index}`);
+                            log(`Cleared keyboard hotkey (id ${index})`, 'warn');
+                        } else {
+                            sendCommand(`setHotkey:${index}:${val}`);
+                            log(`Saved keyboard hotkey (id ${index}): ${val}`, 'ok');
+                        }
+                    });
+                    menu.appendChild(btn);
+                });
+            } else {
+                const items = makeMouseOptions();
+                items.forEach(({ value, label }) => {
+                    const btn = document.createElement('button');
+                    btn.className = 'combo-option' + (value === 'None' ? ' selected' : '');
+                    btn.setAttribute('role', 'option');
+                    btn.dataset.value = value;
+                    btn.textContent = label;
+                    btn.addEventListener('click', (e) => {
+                        e.stopPropagation();
+                        menu.querySelectorAll('.combo-option').forEach(o => o.classList.remove('selected'));
+                        btn.classList.add('selected');
+                        labelEl.textContent = label;
+                        close();
+                        if (value === 'None') {
+                            sendCommand(`clearMouse:${index}`);
+                            log(`Cleared mouse bind (id ${index})`, 'warn');
+                        } else {
+                            sendCommand(`setMouse:${index}:${value}`);
+                            log(`Saved mouse bind (id ${index}): ${label}`, 'ok');
+                        }
+                    });
+                    menu.appendChild(btn);
+                });
+            }
+        }
+
+        function renderAllHotkeyMenus() {
+            $$('.hotkey-combo').forEach(renderHotkeyMenu);
+        }
+
+        setInputDevice('keyboard');
+        renderAllHotkeyMenus();
+
+        document.querySelectorAll('[data-cmd]').forEach(btn => {
+            btn.addEventListener('click', () => sendCommand(btn.getAttribute('data-cmd')));
+        });
+
+        ['clear-log', 'console-clear'].forEach(id => { const el = document.getElementById(id); if (el) el.addEventListener('click', () => { logEl.innerHTML = ''; }); });
+
+        //log('Connected to BRUUUH SERVER', 'ok');
+    </script>
+
+</body>
+</html>
