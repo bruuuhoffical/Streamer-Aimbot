@@ -94,8 +94,7 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Auth\Ed25519.cs" />
-    <Compile Include="Auth\KeyAuth.cs" />
+    <Compile Include="Auth\AuthlyX.cs" />
     <Compile Include="Cheat.cs" />
     <Compile Include="Mem\AobMemV2.cs" />
     <Compile Include="Mem\BRCMem.cs" />
@@ -126,6 +125,11 @@
   <ItemGroup>
     <EmbeddedResource Include="Properties\coverlay.dll" />
     <EmbeddedResource Include="Properties\glew32.dll" />
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="Properties\cnormal.dll" />
+    <EmbeddedResource Include="Properties\MapHdr.dll" />
+    <EmbeddedResource Include="Properties\transparent.dll" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>

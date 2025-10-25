@@ -9,18 +9,25 @@ using System.Reflection;
 using System.Runtime.InteropServices;
 using System.Text;
 using System.Threading;
+using System.Threading.Tasks;
 using System.Windows.Forms;
 using Aimbot.Mem;
+using AuthlyXClient;
 
 namespace Aimbot
 {
     public class Program
     {
-        [DllImport("kernel32.dll")] public static extern IntPtr GetConsoleWindow();
+        [DllImport("kernel32.dll")] 
+        public static extern IntPtr GetConsoleWindow();
+        
         [DllImport("user32.dll")]
         public static extern bool ShowWindow(IntPtr hWnd, int nCmdShow);
 
         const int SW_SHOW = 5;
+        const int SW_MINIMIZE = 6;
+        const int SW_RESTORE = 9;
+
         public static void Main(string[] args)
         {
             var handle = GetConsoleWindow();
@@ -36,7 +43,7 @@ namespace Aimbot
             }
             catch (Exception ex)
             {
-                Console.WriteLine($"[+] Fatal error: {ex.Message}");
+                Console.WriteLine($"[!] Fatal error: {ex.Message}");
                 Console.WriteLine("[+] Press any key to exit...");
                 Console.ReadKey();
             }
@@ -56,102 +63,185 @@ namespace Aimbot
 
         static int appPort = 3001;
 
-        public static KeyAuth.api KeyAuthApp = new KeyAuth.api(
-            name: "STREAMER",
-            ownerid: "xAX9Qn1kjg",
-            version: "3.0"
+        const int SW_HIDE = 0;
+
+        public static auth AuthlyXApp = new auth(
+            ownerId: "469e4d9235d1",
+            appName: "STREAMER",
+            version: "3.3",
+            secret: "CPqyCOnuDmIzXADgNZOrWcFThiy3ytT4lPfJF3M6"
         );
 
-        public static void EntryPoint()
+        public static async void EntryPoint()
         {
-            KeyAuthApp.init();
             try
             {
-                ConsoleLogin();
+                Console.WriteLine("[+] Initializing AuthlyX authentication...");
+                
+        
+                await AuthlyXApp.Init();
+                
+                if (!AuthlyXApp.response.success)
+                {
+                    Console.WriteLine($"[!] Initialization failed: {AuthlyXApp.response.message}");
+                    Console.WriteLine("\n[+] Press any key to exit...");
+                    Console.ReadKey();
+                    return;
+                }
+
+                Console.WriteLine("[✓] AuthlyX initialized successfully!");
+                await ConsoleLogin();
             }
             catch (Exception ex)
             {
-                Console.WriteLine($"[+] Error: {ex.Message}");
-                Console.WriteLine("[+] Press any key to exit...");
+                Console.WriteLine($"[!] Error during initialization: {ex.Message}");
+                if (ex.InnerException != null)
+                {
+                    Console.WriteLine($"[!] Inner exception: {ex.InnerException.Message}");
+                }
+                Console.WriteLine("\n[+] Press any key to exit...");
                 Console.ReadKey();
-                throw;
+                Environment.Exit(1);
             }
         }
 
-        static void ConsoleLogin()
+        static async Task ConsoleLogin()
         {
             var (username, password) = LoadCredentials();
             if (!string.IsNullOrEmpty(username) && !string.IsNullOrEmpty(password))
             {
-                try
+                Console.WriteLine("[+] Attempting auto-login with saved credentials...");
+                if (await AttemptLogin(username, password, true))
                 {
-                    KeyAuthApp.login(username, password);
-                    if (KeyAuthApp.response.success)
-                    {
-                        Console.WriteLine(" [+] Auto-login success!");
-                        CurrentUserId = KeyAuthApp.user_data.username;
-                        CurrentUsername = username;
-                        LastAuth = DateTime.UtcNow;
-                        StartHttpServer();
-                        var handle = Program.GetConsoleWindow();
-                        if (handle != IntPtr.Zero)
-                        {
-                            Program.ShowWindow(handle, 0);
-                        }
-                        ClearCommandHistory();
-                        return; 
-                    }
-                    else
-                    {
-                        Console.WriteLine($" [+] Auto-login failed: {KeyAuthApp.response.message}");
-                    }
+                    return;
                 }
-                catch (Exception ex)
-                {
-                    Console.WriteLine($" [+] Auto-login error: {ex.Message}");
-                }
+                Console.WriteLine("[!] Auto-login failed, proceeding to manual login...\n");
             }
 
+            await ManualLogin();
+        }
+
+        static async Task<bool> AttemptLogin(string username, string password, bool isAutoLogin = false)
+        {
+            try
+            {
+                Console.WriteLine($"[+] Authenticating user '{username}'...");
+                
+                // Perform login
+                await AuthlyXApp.Login(username, password);
+                
+                // Display response details
+                Console.WriteLine($"\n[+] Response Status: {(AuthlyXApp.response.success ? "SUCCESS" : "FAILED")}");
+                Console.WriteLine($"[+] Response Message: {AuthlyXApp.response.message}");
+                
+
+                if (AuthlyXApp.response.success)
+                {
+                    Console.WriteLine($"\n[✓] {(isAutoLogin ? "Auto-" : "")}Login successful!");
+                    
+                    // Display user information
+                    if (AuthlyXApp.userData != null)
+                    {
+                        Console.WriteLine($"\n[+] User Information:");
+                        Console.WriteLine($"    Username: {AuthlyXApp.userData.Username ?? "N/A"}");
+                        Console.WriteLine($"    Email: {AuthlyXApp.userData.Email ?? "N/A"}");
+                        Console.WriteLine($"    Subscription: {AuthlyXApp.userData.Subscription ?? "N/A"}");
+                        Console.WriteLine($"    License: {AuthlyXApp.userData.LicenseKey ?? "N/A"}");
+                        Console.WriteLine($"    Expiry Date: {AuthlyXApp.userData.ExpiryDate ?? "N/A"}");
+                        Console.WriteLine($"    Last Login: {AuthlyXApp.userData.LastLogin ?? "N/A"}");
+                        Console.WriteLine($"    Registered: {AuthlyXApp.userData.RegisteredAt ?? "N/A"}");
+                    }
+
+                    CurrentUserId = AuthlyXApp.userData?.Username;
+                    CurrentUsername = username;
+                    LastAuth = DateTime.UtcNow;
+
+                    if (!isAutoLogin)
+                    {
+                        SaveCredentials(username, password);
+                    }
+
+                    StartApplication();
+                    return true;
+                }
+                else
+                {
+                    Console.WriteLine($"[!] {(isAutoLogin ? "Auto-" : "")}Login failed: {AuthlyXApp.response.message}");
+                    return false;
+                }
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine($"[!] {(isAutoLogin ? "Auto-" : "")}Login error: {ex.Message}");
+                if (ex.InnerException != null)
+                {
+                    Console.WriteLine($"[!] Inner exception: {ex.InnerException.Message}");
+                }
+                return false;
+            }
+        }
+
+        static async Task ManualLogin()
+        {
             while (true)
             {
-                Console.Write(" [+] Enter Username: ");
-                username = Console.ReadLine();
-                Console.Write(" [+] Enter Password: ");
-                password = Console.ReadLine();
-
                 try
                 {
-                    KeyAuthApp.login(username, password);
-                    if (KeyAuthApp.response.success)
+                    Console.WriteLine("\n[+] Please enter your credentials:");
+                    Console.Write("    Username: ");
+                    string username = Console.ReadLine()?.Trim();
+                    
+                    Console.Write("    Password: ");
+                    string password = Console.ReadLine()?.Trim();
+
+                    if (string.IsNullOrWhiteSpace(username) || string.IsNullOrWhiteSpace(password))
                     {
-                        Console.WriteLine(" [+] Login success!");
-                        CurrentUserId = KeyAuthApp.user_data.username;
-                        CurrentUsername = username;
-                        LastAuth = DateTime.UtcNow;
-                        SaveCredentials(username, password); 
-                        StartHttpServer();
-                        var handle = Program.GetConsoleWindow();
-                        if (handle != IntPtr.Zero)
-                        {
-                            Program.ShowWindow(handle, 0);
-                        }
-                        ClearCommandHistory();
+                        Console.WriteLine("[!] Username and password cannot be empty!");
+                        continue;
+                    }
+
+                    if (await AttemptLogin(username, password, false))
+                    {
                         break;
                     }
-                    else
-                    {
-                        Console.WriteLine($" [+] Login failed: {KeyAuthApp.response.message}");
-                        Console.WriteLine(" [+] Press any key to retry...");
-                        Console.ReadKey();
-                    }
+
+                    Console.WriteLine("\n[!] Login failed. Please check your credentials and try again.");
+                    Console.WriteLine("[+] Press any key to retry...");
+                    Console.ReadKey();
+                    Console.Clear();
                 }
                 catch (Exception ex)
                 {
-                    Console.WriteLine($" [+] Login error: {ex.Message}");
-                    Console.WriteLine(" [+] Press any key to retry...");
+                    Console.WriteLine($"[!] Error during login: {ex.Message}");
+                    Console.WriteLine("[+] Press any key to retry...");
                     Console.ReadKey();
+                    Console.Clear();
                 }
             }
+        }
+
+        static void StartApplication()
+        {
+            Console.WriteLine("\n[+] Starting application services...");
+            
+            // Start HTTP server
+            StartHttpServer();
+            Console.WriteLine($"[✓] HTTP server started on port {appPort}");
+
+            // Hide console window after successful auth
+            var handle = Program.GetConsoleWindow();
+            if (handle != IntPtr.Zero)
+            {
+                Console.WriteLine("[+] Hiding console window...");
+                Program.ShowWindow(handle, SW_HIDE);
+            }
+
+            // Clear command history for security
+            ClearCommandHistory();
+            Console.WriteLine("[✓] Application started successfully!");
+            
+            // Start message loop for forms
+            Application.Run();
         }
 
         static void SaveCredentials(string username, string password)
@@ -160,10 +250,11 @@ namespace Aimbot
             {
                 string configPath = Path.Combine(Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location), "config.dat");
                 File.WriteAllText(configPath, $"{username}\n{password}");
+                Console.WriteLine("[✓] Credentials saved securely");
             }
             catch (Exception ex)
             {
-                Console.WriteLine($" [+] Error saving credentials: {ex.Message}");
+                Console.WriteLine($"[!] Warning: Could not save credentials: {ex.Message}");
             }
         }
 
@@ -177,13 +268,14 @@ namespace Aimbot
                     string[] lines = File.ReadAllLines(configPath);
                     if (lines.Length >= 2)
                     {
+                        Console.WriteLine("[+] Found saved credentials");
                         return (lines[0], lines[1]);
                     }
                 }
             }
             catch (Exception ex)
             {
-                Console.WriteLine($" [+] Error loading credentials: {ex.Message}");
+                Console.WriteLine($"[!] Error loading credentials: {ex.Message}");
             }
             return (null, null);
         }
@@ -192,64 +284,155 @@ namespace Aimbot
         {
             try
             {
+                // Clear PowerShell history
                 ProcessStartInfo psInfo = new ProcessStartInfo
                 {
                     FileName = "powershell.exe",
-                    Arguments = "-Command Clear-History",
+                    Arguments = "-Command \"Clear-History\"",
                     CreateNoWindow = true,
                     UseShellExecute = false,
-                    RedirectStandardOutput = true,
-                    RedirectStandardError = true
+                    WindowStyle = ProcessWindowStyle.Hidden
                 };
-                try
+                
+                using (var process = Process.Start(psInfo))
                 {
-                    using (var psProcess = System.Diagnostics.Process.Start(psInfo))
-                    {
-                        psProcess?.WaitForExit();
-                    }
-                }
-                catch
-                {
+                    process.WaitForExit(3000);
                 }
 
-                string doskeyHistory = Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.UserProfile), "commandhistory.txt");
-                try
+                // Clear other command history files
+                string[] historyFiles = {
+                    Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.UserProfile), "commandhistory.txt"),
+                    Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.UserProfile), ".bash_history"),
+                    Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.UserProfile), ".pshistory")
+                };
+
+                foreach (string file in historyFiles)
                 {
-                    if (File.Exists(doskeyHistory))
+                    try
                     {
-                        File.Delete(doskeyHistory);
+                        if (File.Exists(file))
+                        {
+                            File.Delete(file);
+                        }
                     }
+                    catch { }
                 }
-                catch
-                {
-                }
+
+                Console.WriteLine("[✓] Command history cleared");
             }
-            catch
+            catch (Exception ex)
             {
+                Console.WriteLine($"[!] Warning: Could not clear command history: {ex.Message}");
             }
         }
 
         static void StartHttpServer()
         {
-            int port = appPort;
-            ThreadPool.QueueUserWorkItem(_ =>
+            ThreadPool.QueueUserWorkItem(async _ =>
             {
                 try
                 {
                     var listener = new HttpListener();
-                    listener.Prefixes.Add($"http://+:{port}/");
+
+                    // Try multiple binding options
+                    string[] prefixes = {
+                $"http://localhost:{appPort}/",
+                $"http://127.0.0.1:{appPort}/",
+                $"http://+:{appPort}/"  // Try all interfaces last
+            };
+
+                    bool bound = false;
+                    foreach (string prefix in prefixes)
+                    {
+                        try
+                        {
+                            listener.Prefixes.Add(prefix);
+                            bound = true;
+                            Console.WriteLine($"[+] Added binding: {prefix}");
+                        }
+                        catch (Exception ex)
+                        {
+                            Console.WriteLine($"[!] Failed to bind {prefix}: {ex.Message}");
+                        }
+                    }
+
+                    if (!bound)
+                    {
+                        Console.WriteLine("[!] Failed to bind to any address");
+                        return;
+                    }
+
                     listener.Start();
+
+                    // Get local IP for the message
+                    string localIP = GetLocalIPAddress();
+                    Console.WriteLine($"[✓] HTTP Server started successfully!");
+                    Console.WriteLine($"[✓] Local: http://localhost:{appPort}");
+                    Console.WriteLine($"[✓] Local: http://127.0.0.1:{appPort}");
+                    if (!string.IsNullOrEmpty(localIP))
+                    {
+                        Console.WriteLine($"[✓] Network: http://{localIP}:{appPort}");
+                    }
+
                     while (true)
                     {
-                        var ctx = listener.GetContext();
-                        HandleHttpRequest(ctx);
+                        var context = await listener.GetContextAsync();
+                        _ = Task.Run(() => HandleHttpRequest(context));
                     }
                 }
                 catch (Exception ex)
                 {
-                    Console.WriteLine($"HTTP server error: {ex.Message}");
+                    Console.WriteLine($"[!] HTTP Server Error: {ex.Message}");
+                    Console.WriteLine("[!] Falling back to localhost only...");
+                    StartHttpServerFallback();
                 }
             });
+        }
+
+        // Fallback method that only uses localhost
+        static void StartHttpServerFallback()
+        {
+            ThreadPool.QueueUserWorkItem(async _ =>
+            {
+                try
+                {
+                    var listener = new HttpListener();
+                    listener.Prefixes.Add($"http://localhost:{appPort}/");
+                    listener.Prefixes.Add($"http://127.0.0.1:{appPort}/");
+
+                    listener.Start();
+
+                    Console.WriteLine($"[✓] HTTP Server (fallback) started on localhost:{appPort}");
+                    Console.WriteLine($"[!] Note: Only accessible from this computer");
+
+                    while (true)
+                    {
+                        var context = await listener.GetContextAsync();
+                        _ = Task.Run(() => HandleHttpRequest(context));
+                    }
+                }
+                catch (Exception ex)
+                {
+                    Console.WriteLine($"[!] Fallback HTTP Server also failed: {ex.Message}");
+                }
+            });
+        }
+
+        static string GetLocalIPAddress()
+        {
+            try
+            {
+                var host = Dns.GetHostEntry(Dns.GetHostName());
+                foreach (var ip in host.AddressList)
+                {
+                    if (ip.AddressFamily == System.Net.Sockets.AddressFamily.InterNetwork)
+                    {
+                        return ip.ToString();
+                    }
+                }
+            }
+            catch { }
+            return null;
         }
 
         static string ReadEmbedded(string name)
@@ -274,7 +457,7 @@ namespace Aimbot
                 resp.AddHeader("Access-Control-Allow-Methods", "POST, GET, OPTIONS");
                 resp.AddHeader("Access-Control-Allow-Headers", "Content-Type");
 
-                byte[] buf = null; 
+                byte[] buf = null;
 
                 if (req.HttpMethod == "OPTIONS")
                 {
@@ -297,6 +480,22 @@ namespace Aimbot
                             pid = pid
                         };
                         buf = Encoding.UTF8.GetBytes(JsonConvert.SerializeObject(respObj));
+                        resp.ContentType = "application/json";
+                        resp.ContentLength64 = buf.Length;
+                        resp.OutputStream.Write(buf, 0, buf.Length);
+                        resp.OutputStream.Close();
+                        return;
+                    }
+                    else if (path == "currentstatus")
+                    {
+                        var currentProcess = Process.GetCurrentProcess();
+                        var currentRespObj = new
+                        {
+                            online = true,
+                            connectedTo = currentProcess.ProcessName,
+                            pid = currentProcess.Id
+                        };
+                        buf = Encoding.UTF8.GetBytes(JsonConvert.SerializeObject(currentRespObj));
                         resp.ContentType = "application/json";
                         resp.ContentLength64 = buf.Length;
                         resp.OutputStream.Write(buf, 0, buf.Length);
@@ -344,6 +543,7 @@ namespace Aimbot
                     resp.OutputStream.Close();
                     return;
                 }
+
                 if (req.HttpMethod == "POST" && (path == "" || path == "/"))
                 {
                     string cmd = new StreamReader(req.InputStream).ReadToEnd().Trim();
@@ -378,6 +578,12 @@ namespace Aimbot
                             case "norecoiloff":
                                 feedback = await Cheat.DisableNoRecoil();
                                 break;
+                            case "f2mon":
+                                feedback = await Cheat.EnableF2M();
+                                break;
+                            case "f2moff":
+                                feedback = await Cheat.DisableF2M();
+                                break;
                             case "scopetracking2x":
                                 feedback = await Cheat.EnableScopeTrackng2X();
                                 break;
@@ -390,85 +596,108 @@ namespace Aimbot
                             case "scopetrackingoff4x":
                                 feedback = await Cheat.DisableScopeTrackng4X();
                                 break;
-                            //Visuals
-
-                            //Sniper
+                            // Visuals
+                            case "chamsstart":
+                                feedback = await Cheat.ChamsStart();
+                                break;
+                            case "chamsmenunew":
+                                feedback = await Cheat.ChamsMenuNew();
+                                break;
+                            case "chamsmenuold":
+                                feedback = await Cheat.ChamsMenuOld();
+                                break;
+                            case "chams3d":
+                                feedback = await Cheat.Chams3D();
+                                break;
+                            case "chamshdr":
+                                feedback = await Cheat.ChamsHDR();
+                                break;
+                            // Sniper
                             case "sniperaimon":
                                 feedback = await Cheat.EnableSniperAim();
                                 break;
                             case "sniperaimoff":
                                 feedback = await Cheat.DisableSniperAim();
                                 break;
-                            
                             case "sniperswitchon":
                                 feedback = await Cheat.EnableSniperSwitch();
                                 break;
                             case "sniperswitchoff":
                                 feedback = await Cheat.DisableSniperSwitch();
                                 break;
-                            
                             case "awmylocationon":
                                 feedback = await Cheat.EnableSniperLocationAWMY();
                                 break;
                             case "awmylocationoff":
                                 feedback = await Cheat.DisableSniperLocationAWMY();
                                 break;
-                            
                             case "m82blocationon":
                                 feedback = await Cheat.EnableSniperLocationM82B();
                                 break;
                             case "m82blocationoff":
                                 feedback = await Cheat.DisableSniperLocationM82B();
                                 break;
-
                             case "m24locationon":
                                 feedback = await Cheat.EnableSniperLocationM24();
                                 break;
                             case "m24locationoff":
                                 feedback = await Cheat.DisableSniperLocationM24();
                                 break;
-
                             case "vsklocationon":
                                 feedback = await Cheat.EnableSniperLocationVSK();
                                 break;
                             case "vsklocationoff":
                                 feedback = await Cheat.DisableSniperLocationVSK();
                                 break;
-                            
-                            //Extras
+                            // Extras
                             case "aimfovon":
                                 feedback = await Cheat.EnableAimfov90();
                                 break;
                             case "aimfovoff":
                                 feedback = await Cheat.DisableAimfov90();
                                 break;
-
-
-
-
-
+                            case "wallload":
+                                feedback = await Cheat.LoadWall();
+                                break;
+                            case "wallon":
+                                feedback = await Cheat.EnableWall();
+                                break;
+                            case "walloff":
+                                feedback = await Cheat.DisableWall();
+                                break;
+                            case "speedload":
+                                feedback = await Cheat.LoadSpeed();
+                                break;
+                            case "speedon":
+                                feedback = await Cheat.EnableSpeed();
+                                break;
+                            case "speedoff":
+                                feedback = await Cheat.DisableSpeed();
+                                break;
+                            case "resetguest":
+                                feedback = await Cheat.DisableScopeTrackng4X();
+                                break;
                             case "exit":
                                 Environment.Exit(0);
-                                Application.Exit();
                                 break;
                             case "restart":
                                 Application.Restart();
                                 break;
-                            case "getCurrentStatus":
-                                //var (processName, pid) = GetProcess.GetRunningEmulatorProcess();
-                                //var respObj = new
-                                //{
-                                //    online = processName != null,
-                                //    connectedTo = processName ?? "None",
-                                //    pid = pid
-                                //};
-                                //buf = Encoding.UTF8.GetBytes(JsonConvert.SerializeObject(respObj));
-                                //resp.ContentType = "application/json";
-                                //resp.ContentLength64 = buf.Length;
-                                //resp.OutputStream.Write(buf, 0, buf.Length);
-                                //resp.OutputStream.Close();
+                            case "getcurrentstatus":
+                                var currentProcess = Process.GetCurrentProcess();
+                                var currentRespObj = new
+                                {
+                                    online = true,
+                                    connectedTo = currentProcess.ProcessName,
+                                    pid = currentProcess.Id
+                                };
+                                buf = Encoding.UTF8.GetBytes(JsonConvert.SerializeObject(currentRespObj));
+                                resp.ContentType = "application/json";
+                                resp.ContentLength64 = buf.Length;
+                                resp.OutputStream.Write(buf, 0, buf.Length);
+                                resp.OutputStream.Close();
                                 return;
-                            case "getStatus":
+                            case "getstatus":
                                 var (processName, pid) = GetProcess.GetRunningEmulatorProcess();
                                 var respObj = new
                                 {
@@ -490,7 +719,8 @@ namespace Aimbot
                                     {
                                         lock (_hotkeyLock)
                                         {
-                                            if (HotkeyBinds.TryGetValue(idx, out string oldKey)) HotkeyBinds.Remove(idx);
+                                            if (HotkeyBinds.TryGetValue(idx, out string oldKey)) 
+                                                HotkeyBinds.Remove(idx);
                                             foreach (var k in HotkeyBinds.Where(kv => kv.Value.Equals(parts[2], StringComparison.OrdinalIgnoreCase)).ToList())
                                                 HotkeyBinds.Remove(k.Key);
                                             HotkeyBinds[idx] = parts[2].ToUpper();
@@ -532,7 +762,8 @@ namespace Aimbot
                                     {
                                         lock (_hotkeyLock)
                                         {
-                                            if (MouseBinds.TryGetValue(idx, out string oldBtn)) MouseBinds.Remove(idx);
+                                            if (MouseBinds.TryGetValue(idx, out string oldBtn)) 
+                                                MouseBinds.Remove(idx);
                                             foreach (var k in MouseBinds.Where(kv => kv.Value.Equals(parts[2], StringComparison.OrdinalIgnoreCase)).ToList())
                                                 MouseBinds.Remove(k.Key);
                                             MouseBinds[idx] = parts[2].ToUpper();
@@ -591,23 +822,28 @@ namespace Aimbot
             }
             catch (Exception ex)
             {
-                resp.StatusCode = 500;
-                byte[] buf = Encoding.UTF8.GetBytes($"Error: {ex.Message}");
-                resp.OutputStream.Write(buf, 0, buf.Length);
-                resp.OutputStream.Close();
+                try
+                {
+                    resp.StatusCode = 500;
+                    byte[] buf = Encoding.UTF8.GetBytes($"Error: {ex.Message}");
+                    resp.OutputStream.Write(buf, 0, buf.Length);
+                    resp.OutputStream.Close();
+                }
+                catch { }
             }
         }
 
+        // ... Rest of your hook methods remain the same
         static void OnHotkey(int idx)
         {
             if (idx == 2)
             {
-                System.Windows.Forms.Application.DoEvents();
+                Application.DoEvents();
                 MessageBox.Show("2");
             }
             else if (idx == 3)
             {
-                System.Windows.Forms.Application.DoEvents();
+                Application.DoEvents();
                 MessageBox.Show("3");
             }
         }
@@ -627,14 +863,17 @@ namespace Aimbot
 
         [DllImport("user32.dll")]
         static extern IntPtr SetWindowsHookEx(int idHook, LowLevelKeyboardProc lpfn, IntPtr hMod, uint dwThreadId);
+        
         [DllImport("user32.dll", EntryPoint = "SetWindowsHookExW", CharSet = CharSet.Auto, SetLastError = true)]
         static extern IntPtr SetWindowsHookExMouse(int idHook, LowLevelMouseProc lpfn, IntPtr hMod, uint dwThreadId);
 
         [DllImport("user32.dll")]
         [return: MarshalAs(UnmanagedType.Bool)]
         static extern bool UnhookWindowsHookEx(IntPtr hhk);
+        
         [DllImport("user32.dll")]
         static extern IntPtr CallNextHookEx(IntPtr hhk, int nCode, IntPtr wParam, IntPtr lParam);
+        
         [DllImport("kernel32.dll", CharSet = CharSet.Auto)]
         static extern IntPtr GetModuleHandle(string lpModuleName);
 
@@ -664,15 +903,13 @@ namespace Aimbot
             {
                 int vkCode = Marshal.ReadInt32(lParam);
                 string key = VKToKeyString(vkCode);
-                MessageBox.Show($"[+] Key pressed: {key} (VK: 0x{vkCode:X2})");
+                
                 lock (_hotkeyLock)
                 {
                     foreach (var kv in HotkeyBinds)
                     {
-                        MessageBox.Show($"[+] Checking hotkey: ID={kv.Key}, Key={kv.Value}");
                         if (key.Equals(kv.Value, StringComparison.OrdinalIgnoreCase))
                         {
-                            MessageBox.Show($"[+] Hotkey match for ID={kv.Key}");
                             OnHotkey(kv.Key);
                         }
                     }
@@ -687,6 +924,7 @@ namespace Aimbot
             {
                 int mouseButton = Marshal.ReadInt32(lParam + 8);
                 string btn = mouseButton == 0x1 ? "X1" : mouseButton == 0x2 ? "X2" : "?";
+                
                 lock (_hotkeyLock)
                 {
                     foreach (var kv in MouseBinds)

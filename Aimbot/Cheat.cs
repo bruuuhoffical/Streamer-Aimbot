@@ -1,12 +1,15 @@
 ﻿using Aimbot.Mem;
 using hideit;
+using MemoryAim2;
 using System;
 using System.Collections.Generic;
 using System.Diagnostics;
+using System.IO;
 using System.Linq;
+using System.Reflection;
+using System.Runtime.InteropServices;
 using System.Text;
 using System.Threading.Tasks;
-using MemoryAim2;
 namespace Aimbot
 {
     public  class Cheat
@@ -17,17 +20,17 @@ namespace Aimbot
         public static bool aimbotDrag = false;
         public static bool aimbotDragPro = false;
 
-        private static readonly string aimbotHeadAob = "FF FF FF FF FF FF FF FF 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 ?? ?? ?? ?? ?? ?? ?? ?? ?? ?? ?? ?? ?? ?? ?? ?? ?? ?? ?? ?? ?? ?? ?? ?? ?? ?? ?? ?? ?? ?? ?? ?? ?? ?? ?? ?? ?? ?? ?? ?? ?? ?? ?? ?? ?? ?? ?? ?? ?? ?? ?? 00 00 00 00 00 00 00 00 00 00 00 00 A5 43";
+        private static readonly string aimbotHeadAob = "FF FF ?? ?? ?? ?? ?? ?? ?? ?? ?? ?? ?? ?? ?? ?? ?? ?? ?? ?? ?? 00 00 ?? ?? ?? ?? ?? ?? ?? ?? ?? ?? ?? ?? ?? ?? ?? ?? ?? ?? ?? ?? ?? ?? ?? ?? ?? ?? ?? ?? ?? ?? ?? ?? ?? ?? ?? ?? ?? ?? ?? ?? ?? ?? ?? ?? ?? ?? ?? ?? ?? ?? ?? 00 00 ?? ?? ?? ?? ?? ?? ?? ?? 00 00 A5 43";
         private const long NeckOffsetH = 0x80;
         private const long ChestOffsetH = 0x7C;
 
-        private static readonly string aimbotDragAob = "FF FF 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 FF FF FF FF FF FF FF FF 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 ?? ?? ?? ?? ?? ?? ?? ?? ?? ?? ?? ?? ?? ?? ?? ?? ?? ?? ?? ?? ?? ?? ?? ?? ?? ?? ?? ?? ?? ?? ?? ?? ?? ?? ?? ?? ?? ?? ?? ?? 00 00 00 00 00 00 00 00 00 00 00 00 00 00 A5 43";
-        private const long NeckOffsetD = 0xD2;
-        private const long ChestOffsetD = 0x9E;
+        private static readonly string aimbotDragAob = "FF FF ?? ?? ?? ?? ?? ?? ?? ?? ?? ?? ?? ?? ?? ?? ?? ?? ?? ?? ?? 00 00 ?? ?? ?? ?? ?? ?? ?? ?? ?? ?? ?? ?? ?? ?? ?? ?? ?? ?? ?? ?? ?? ?? ?? ?? ?? ?? ?? ?? ?? ?? ?? ?? ?? ?? ?? ?? ?? ?? ?? ?? ?? ?? ?? ?? ?? ?? ?? ?? ?? ?? ?? 00 00 ?? ?? ?? ?? ?? ?? ?? ?? 00 00 A5 43";
+        private const long NeckOffsetD = 0xAA;
+        private const long ChestOffsetD = 0xA6;
 
-        private static readonly string aimbotDragProAob = "FF FF 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 FF FF FF FF FF FF FF FF 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 ?? ?? ?? ?? ?? ?? ?? ?? ?? ?? ?? ?? ?? ?? ?? ?? ?? ?? ?? ?? ?? ?? ?? ?? ?? ?? ?? ?? ?? ?? ?? ?? ?? ?? ?? ?? ?? ?? ?? ?? ?? ?? ?? ?? ?? ?? ?? ?? ?? ?? ?? 00 00 00 00 00 00 00 00 00 00 00 00 A5 43";
-        private const long NeckOffsetDP = 0xAA;
-        private const long ChestOffsetDP = 0xA6;
+        private static readonly string aimbotDragProAob = "FF FF FF FF 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 FF FF FF FF FF FF FF FF 00 00 00 00 00 00 00 00 00 00 00 00 00 00 00 ?? ?? ?? ?? ?? ?? ?? ?? ?? ?? ?? ?? ?? ?? ?? ?? ?? ?? ?? ?? ?? ?? ?? ?? ?? ?? ?? ?? ?? ?? ?? ?? ?? ?? ?? ?? ?? ?? ?? ?? ?? ?? ?? ?? ?? ?? ?? ?? ?? ?? ?? 00 00 00 00 00 00 00 00 00 00 00 00 A5 43";
+        private const long NeckOffsetDP = 0x168;
+        private const long ChestOffsetDP = 0x172;
 
         public static List<string> scopeTRSearchList = new List<string>
         {
@@ -44,11 +47,14 @@ namespace Aimbot
         private static readonly string search2x = "33 33 93 3f 8f c2 f5 3c cd cc cc 3d 02 00 00 00 ec 51 b8 3d cd cc 4c 3f 00 00 00 00 00 00 a0 42 00 00 c0 3f 33 33 13 40 00 00 f0 3f 00 00 80 3f 01 00";
         private static readonly string replace2x = "33 33 93 3f 8f c2 f5 3c cd cc cc 3d 02 00 00 00 ec 51 b8 3d cd cc 4c 3f 00 00 00 00 00 00 a0 42 00 00 c0 3f 33 33 13 40 00 00 f0 3f 00 00 29 5c 01 00";
 
-        private static readonly string search4x = "20 40 CD CC 8C 3F 8F C2 F5 3C CD CC CC 3D ?? 00 00 00 29 5C 8F 3D 00 00 00 3F 00 00 F0 41 00 00 48 42 00 00 00 3F 33 33 13 40 00 00 D0 3F 00 00 80 3F 01";
-        private static readonly string replace4x = "20 40 CD CC 8C 3F 8F C2 F5 3C CD CC CC 3D ?? 00 00 00 29 5C 8F 3D 00 00 00 3F 00 00 F0 41 00 00 48 42 00 00 00 3F 33 33 13 40 00 00 D0 3F 00 00 80 5C 01";
+        private static readonly string search4x = "00 00 00 00 FF FF FF FF 86 A3 03 00 FD 7E 03 00 00 7F 03 00 FD 7E 03 00 01 00 00 00 9A 99 99 3E F9 7E 03 00 04 00 00 00 00 00 20 40 CD CC 8C 3F 8F C2 F5 3C CD CC CC 3D ?? 00 00 00 29 5C 8F 3D 00 00 00 3F 00 00 F0 41 00 00 48 42 00 00 00 3F 33 33 13 40 00 00 D0 3F 00 00 80 3F 01";
+        private static readonly string replace4x = "00 00 00 00 FF FF FF FF 86 A3 03 00 FD 7E 03 00 00 7F 03 00 FD 7E 03 00 01 00 00 00 9A 99 99 3E F9 7E 03 00 04 00 00 00 00 00 20 40 CD CC 8C 3F 8F C2 F5 3C CD CC CC 3D ?? 00 00 00 29 5C 8F 3D 00 00 00 3F 00 00 F0 41 00 00 48 42 00 00 00 3F 33 33 13 40 00 00 D0 3F 00 00 80 5C 01";
         
-        private static readonly string searchRC = "03 0A 9F ED 10 0A 01 EE 00 0A 81 EE 10 0A 10 EE 10 8C BD E8 00 00 7A 44 F0";
-        private static readonly string replaceRC = "03 0A 9F ED 10 0A 01 EE 00 0A 81 EE 10 0A 10 EE 10 8C BD E8 00 00 00 00 F0";
+        private static readonly string searchRC = "30 48 2D E9 08 B0 8D E2 02 8B 2D ED 00 40 A0 E1 38 01 9F E5 00 00 8F E0 00 00 D0 E5";
+        private static readonly string replaceRC = "00 00 A0 E3 1E FF 2F E1 02 8B 2D ED 00 40 A0 E1 38 01 9F E5 00 00 8F E0 00 00 D0 E5";
+        
+        private static readonly string searchF2M = "03 0A 9F ED 10 0A 01 EE 00 0A 81 EE 10 0A 10 EE 10 8C BD E8 00 00 7A 44 F0";
+        private static readonly string replaceF2M = "03 0A 9F ED 10 0A 01 EE 00 0A 81 EE 10 0A 10 EE 10 8C BD E8 00 00 00 00 F0";
         
         private static readonly string sniperAimSearch = "01 00 00 00 00 00 00 00 00 00 00 00 41 00 00 00 00 00 00 00 01 00 00 00 CD CC";
         private static readonly string sniperAimReplace = "01 00 00 00 00 00 00 00 00 00 00 00 41 00 00 00 00 00 00 00 00 00 00 00 CD CC";
@@ -71,14 +77,16 @@ namespace Aimbot
         private static readonly string aimfovSearch = "CD CC 4C 3E A4 70 FD 3E AE 47 01 3F A4 70 FD 3E AE 47 01 3F AE";
         private static readonly string aimfovReplace = "CD CC 4C 3E A4 70 FD 3E AE 47 E9 FF A4 70 FD 3E AE 47 01 3F AE";
         
-        private static readonly string guestSearch = "";
-        private static readonly string guestReplace = "";
+        private static readonly string guestSearch = "10 4C 2D E9 08 B0 8D E2 0C 01 9F E5 00 00 8F E0 00 00 D0 E5 00 00 50 E3 06 00 00 1A FC 00 9F E5 00 00 9F E7 00 00 90 E5 BE";
+        private static readonly string guestReplace = "01 00 A0 E3 1E FF 2F E1 0C 01 9F E5 00 00 8F E0";
         
-        private static readonly string wallSearch = "";
-        private static readonly string wallReplace = "";
-        
-        private static readonly string speedSearch = "";
-        private static readonly string speedReplace = "";
+        private static readonly string wallSearch = "3F AE 47 81 3F AE 47 81 3F AE 47 81 3F 00";
+        private static readonly string wallReplace = "3F AE 47 81 3F AE 47 81 BF AE 47 81 3F AE";
+        private static List<ulong> WallAddress = new List<ulong>();
+
+        private static readonly string speedSearch = "00 01 00 00 00 02 2B 07 3D";
+        private static readonly string speedReplace = "00 01 00 00 00 92 E4 50 3D";
+        private static List<ulong> SpeedAddress = new List<ulong>();
 
         private static readonly BRCMem Memory = new BRCMem();
 
@@ -377,7 +385,7 @@ namespace Aimbot
             }
             catch (Exception ex)
             {
-                return $"Error in test(): {ex.Message}";
+                return $"Error in No Recoil: {ex.Message}";
             }
         }
 
@@ -418,7 +426,92 @@ namespace Aimbot
             }
             catch (Exception ex)
             {
-                return $"Error in test(): {ex.Message}";
+                return $"Error in No Recoil: {ex.Message}";
+            }
+        }
+
+        #endregion
+
+        #region Female to Male
+        public static async Task<string> EnableF2M()
+        {
+            try
+            {
+                var emulator = GetProcess.GetRunningEmulatorProcessName();
+                var narzo = new BRCMem();
+
+                if (!narzo.SetProcess(new string[] { emulator }))
+                {
+                    return "Failed to attach to emulator process.";
+                }
+
+                narzo.CheckProcess();
+
+                var matches = await narzo.AoBScan(searchF2M);
+                if (matches == null || !matches.Any())
+                {
+                    return "No Pattern Found";
+                }
+
+                int replacedCount = 0;
+                foreach (var addr in matches)
+                {
+                    try
+                    {
+                        bool result = narzo.AobReplace(addr, replaceF2M);
+                        if (result) replacedCount++;
+                    }
+                    catch
+                    {
+
+                    }
+                }
+                return "Female 2 Male Enabled.";
+            }
+            catch (Exception ex)
+            {
+                return $"Error in Female 2 Male: {ex.Message}";
+            }
+        }
+
+        public static async Task<string> DisableF2M()
+        {
+            try
+            {
+                var emulator = GetProcess.GetRunningEmulatorProcessName();
+                var narzo = new BRCMem();
+
+                if (!narzo.SetProcess(new string[] { emulator }))
+                {
+                    return "Failed to attach to emulator process.";
+                }
+
+                narzo.CheckProcess();
+
+                var matches = await narzo.AoBScan(replaceF2M);
+                if (matches == null || !matches.Any())
+                {
+                    return "No Pattern Found";
+                }
+
+                int replacedCount = 0;
+                foreach (var addr in matches)
+                {
+                    try
+                    {
+                        bool result = narzo.AobReplace(addr, searchF2M);
+                        if (result) replacedCount++;
+                    }
+                    catch
+                    {
+
+                    }
+                }
+                return "Female 2 Male Disabled.";
+            }
+            catch (Exception ex)
+            {
+                return $"Error in Female 2 Male: {ex.Message}";
             }
         }
 
@@ -462,7 +555,7 @@ namespace Aimbot
             }
             catch (Exception ex)
             {
-                return $"Error in test(): {ex.Message}";
+                return $"Error in Scope Tracking 2x: {ex.Message}";
             }
         }
 
@@ -503,7 +596,7 @@ namespace Aimbot
             }
             catch (Exception ex)
             {
-                return $"Error in test(): {ex.Message}";
+                return $"Error in Scope Tracking 2x: {ex.Message}";
             }
         }
 
@@ -544,7 +637,7 @@ namespace Aimbot
             }
             catch (Exception ex)
             {
-                return $"Error in test(): {ex.Message}";
+                return $"Error in Scope Tracking 4x: {ex.Message}";
             }
         }
 
@@ -585,7 +678,7 @@ namespace Aimbot
             }
             catch (Exception ex)
             {
-                return $"Error in test(): {ex.Message}";
+                return $"Error in Scope Tracking 4x: {ex.Message}";
             }
         }
 
@@ -594,6 +687,171 @@ namespace Aimbot
         #endregion
 
         #region Visuals
+
+        #region Chams Start
+        public static async Task<string> ChamsStart()
+        {
+            string processName = "HD-Player";
+            string resourceName = "Aimbot.Properties.glew32.dll";
+            string glewpath = Path.Combine(Path.GetTempPath(), "glew32.dll");
+            Cheat.inject(resourceName, glewpath);
+            Process[] targetProcesses = Process.GetProcessesByName(processName);
+            if (targetProcesses.Length == 0)
+            {
+                return "Emulator Not Running";
+            }
+            Process targetProcess = targetProcesses[0];
+            IntPtr hProcess = Cheat.OpenProcess(1082U, false, targetProcess.Id);
+            if (hProcess == IntPtr.Zero)
+            {
+                return "Chams Start Failed";
+            }
+            IntPtr loadLibraryAddr = Cheat.GetProcAddress(Cheat.GetModuleHandle("kernel32.dll"), "LoadLibraryA");
+            IntPtr allocMemAddress = Cheat.VirtualAllocEx(hProcess, IntPtr.Zero, (IntPtr)glewpath.Length, 4096U, 4U);
+            IntPtr bytesWritten;
+            Cheat.WriteProcessMemory(hProcess, allocMemAddress, Encoding.ASCII.GetBytes(glewpath), checked((uint)glewpath.Length), out bytesWritten);
+            if (Cheat.CreateRemoteThread(hProcess, IntPtr.Zero, IntPtr.Zero, loadLibraryAddr, allocMemAddress, 0U, IntPtr.Zero) == IntPtr.Zero)
+            {
+                return "Chams Start Failed";
+            }
+            else
+            {
+                return "Chams Started Injected";
+            }
+        }
+        #endregion
+
+        #region Chams Menu Old
+        public static async Task<string> ChamsMenuOld()
+        {
+            string processName = "HD-Player";
+            string resourceName = "Aimbot.Properties.cnormal.dll";
+            string glewpath = Path.Combine(Path.GetTempPath(), "cnormal.dll");
+            Cheat.inject(resourceName, glewpath);
+            Process[] targetProcesses = Process.GetProcessesByName(processName);
+            if (targetProcesses.Length == 0)
+            {
+                return "Emulator Not Running";
+            }
+            Process targetProcess = targetProcesses[0];
+            IntPtr hProcess = Cheat.OpenProcess(1082U, false, targetProcess.Id);
+            if (hProcess == IntPtr.Zero)
+            {
+                return "Chams Menu Old Failed";
+            }
+            IntPtr loadLibraryAddr = Cheat.GetProcAddress(Cheat.GetModuleHandle("kernel32.dll"), "LoadLibraryA");
+            IntPtr allocMemAddress = Cheat.VirtualAllocEx(hProcess, IntPtr.Zero, (IntPtr)glewpath.Length, 4096U, 4U);
+            IntPtr bytesWritten;
+            Cheat.WriteProcessMemory(hProcess, allocMemAddress, Encoding.ASCII.GetBytes(glewpath), checked((uint)glewpath.Length), out bytesWritten);
+            if (Cheat.CreateRemoteThread(hProcess, IntPtr.Zero, IntPtr.Zero, loadLibraryAddr, allocMemAddress, 0U, IntPtr.Zero) == IntPtr.Zero)
+            {
+                return "Chams Menu Old Failed";
+            }
+            else
+            {
+                return "Chams Menu Old Injected";
+            }
+        }
+        #endregion
+
+        #region Chams Menu New
+        public static async Task<string> ChamsMenuNew()
+        {
+            string processName = "HD-Player";
+            string resourceName = "Aimbot.Properties.coverlay.dll";
+            string glewpath = Path.Combine(Path.GetTempPath(), "coverlay.dll");
+            Cheat.inject(resourceName, glewpath);
+            Process[] targetProcesses = Process.GetProcessesByName(processName);
+            if (targetProcesses.Length == 0)
+            {
+                return "Emulator Not Running";
+            }
+            Process targetProcess = targetProcesses[0];
+            IntPtr hProcess = Cheat.OpenProcess(1082U, false, targetProcess.Id);
+            if (hProcess == IntPtr.Zero)
+            {
+                return "Chams Menu New Failed";
+            }
+            IntPtr loadLibraryAddr = Cheat.GetProcAddress(Cheat.GetModuleHandle("kernel32.dll"), "LoadLibraryA");
+            IntPtr allocMemAddress = Cheat.VirtualAllocEx(hProcess, IntPtr.Zero, (IntPtr)glewpath.Length, 4096U, 4U);
+            IntPtr bytesWritten;
+            Cheat.WriteProcessMemory(hProcess, allocMemAddress, Encoding.ASCII.GetBytes(glewpath), checked((uint)glewpath.Length), out bytesWritten);
+            if (Cheat.CreateRemoteThread(hProcess, IntPtr.Zero, IntPtr.Zero, loadLibraryAddr, allocMemAddress, 0U, IntPtr.Zero) == IntPtr.Zero)
+            {
+                return "Chams Menu New Failed";
+            }
+            else
+            {
+                return "Chams Menu New Injected";
+            }
+        }
+        #endregion
+
+        #region Chams 3D
+        public static async Task<string> Chams3D()
+        {
+            string processName = "HD-Player";
+            string resourceName = "Aimbot.Properties.transparent.dll";
+            string glewpath = Path.Combine(Path.GetTempPath(), "transparent.dll");
+            Cheat.inject(resourceName, glewpath);
+            Process[] targetProcesses = Process.GetProcessesByName(processName);
+            if (targetProcesses.Length == 0)
+            {
+                return "Emulator Not Running";
+            }
+            Process targetProcess = targetProcesses[0];
+            IntPtr hProcess = Cheat.OpenProcess(1082U, false, targetProcess.Id);
+            if (hProcess == IntPtr.Zero)
+            {
+                return "Chams 3D Failed";
+            }
+            IntPtr loadLibraryAddr = Cheat.GetProcAddress(Cheat.GetModuleHandle("kernel32.dll"), "LoadLibraryA");
+            IntPtr allocMemAddress = Cheat.VirtualAllocEx(hProcess, IntPtr.Zero, (IntPtr)glewpath.Length, 4096U, 4U);
+            IntPtr bytesWritten;
+            Cheat.WriteProcessMemory(hProcess, allocMemAddress, Encoding.ASCII.GetBytes(glewpath), checked((uint)glewpath.Length), out bytesWritten);
+            if (Cheat.CreateRemoteThread(hProcess, IntPtr.Zero, IntPtr.Zero, loadLibraryAddr, allocMemAddress, 0U, IntPtr.Zero) == IntPtr.Zero)
+            {
+                return "Chams 3D Failed";
+            }
+            else
+            {
+                return "Chams 3D Injected";
+            }
+        }
+        #endregion
+
+        #region Chams HDR MAP
+        public static async Task<string> ChamsHDR()
+        {
+            string processName = "HD-Player";
+            string resourceName = "Aimbot.Properties.MapHdr.dll";
+            string glewpath = Path.Combine(Path.GetTempPath(), "MapHdr.dll");
+            Cheat.inject(resourceName, glewpath);
+            Process[] targetProcesses = Process.GetProcessesByName(processName);
+            if (targetProcesses.Length == 0)
+            {
+                return "Emulator Not Running";
+            }
+            Process targetProcess = targetProcesses[0];
+            IntPtr hProcess = Cheat.OpenProcess(1082U, false, targetProcess.Id);
+            if (hProcess == IntPtr.Zero)
+            {
+                return "Chams HDR Failed";
+            }
+            IntPtr loadLibraryAddr = Cheat.GetProcAddress(Cheat.GetModuleHandle("kernel32.dll"), "LoadLibraryA");
+            IntPtr allocMemAddress = Cheat.VirtualAllocEx(hProcess, IntPtr.Zero, (IntPtr)glewpath.Length, 4096U, 4U);
+            IntPtr bytesWritten;
+            Cheat.WriteProcessMemory(hProcess, allocMemAddress, Encoding.ASCII.GetBytes(glewpath), checked((uint)glewpath.Length), out bytesWritten);
+            if (Cheat.CreateRemoteThread(hProcess, IntPtr.Zero, IntPtr.Zero, loadLibraryAddr, allocMemAddress, 0U, IntPtr.Zero) == IntPtr.Zero)
+            {
+                return "Chams HDR Failed";
+            }
+            else
+            {
+                return "Chams HDR Injected";
+            }
+        }
+        #endregion
 
         #endregion
 
@@ -637,7 +895,7 @@ namespace Aimbot
             }
             catch (Exception ex)
             {
-                return $"Error in test(): {ex.Message}";
+                return $"Error in Sniper Aim: {ex.Message}";
             }
         }
 
@@ -678,7 +936,7 @@ namespace Aimbot
             }
             catch (Exception ex)
             {
-                return $"Error in test(): {ex.Message}";
+                return $"Error in Sniper Aim: {ex.Message}";
             }
         }
         #endregion
@@ -721,7 +979,7 @@ namespace Aimbot
             }
             catch (Exception ex)
             {
-                return $"Error in test(): {ex.Message}";
+                return $"Error in Sniper Switch: {ex.Message}";
             }
         }
 
@@ -762,7 +1020,7 @@ namespace Aimbot
             }
             catch (Exception ex)
             {
-                return $"Error in test(): {ex.Message}";
+                return $"Error in Sniper Switch: {ex.Message}";
             }
         }
         #endregion
@@ -805,7 +1063,7 @@ namespace Aimbot
             }
             catch (Exception ex)
             {
-                return $"Error in test(): {ex.Message}";
+                return $"Error in Location AWMY: {ex.Message}";
             }
         }
 
@@ -846,7 +1104,7 @@ namespace Aimbot
             }
             catch (Exception ex)
             {
-                return $"Error in test(): {ex.Message}";
+                return $"Error in Location AWMY: {ex.Message}";
             }
         }
         #endregion
@@ -889,7 +1147,7 @@ namespace Aimbot
             }
             catch (Exception ex)
             {
-                return $"Error in test(): {ex.Message}";
+                return $"Error in Location M82B: {ex.Message}";
             }
         }
 
@@ -930,7 +1188,7 @@ namespace Aimbot
             }
             catch (Exception ex)
             {
-                return $"Error in test(): {ex.Message}";
+                return $"Error in Location M82B: {ex.Message}";
             }
         }
         #endregion
@@ -973,7 +1231,7 @@ namespace Aimbot
             }
             catch (Exception ex)
             {
-                return $"Error in test(): {ex.Message}";
+                return $"Error in Location M24: {ex.Message}";
             }
         }
 
@@ -1014,7 +1272,7 @@ namespace Aimbot
             }
             catch (Exception ex)
             {
-                return $"Error in test(): {ex.Message}";
+                return $"Error in Location M24: {ex.Message}";
             }
         }
         #endregion
@@ -1057,7 +1315,7 @@ namespace Aimbot
             }
             catch (Exception ex)
             {
-                return $"Error in test(): {ex.Message}";
+                return $"Error in Location VSK: {ex.Message}";
             }
         }
 
@@ -1098,7 +1356,7 @@ namespace Aimbot
             }
             catch (Exception ex)
             {
-                return $"Error in test(): {ex.Message}";
+                return $"Error in Location VSK: {ex.Message}";
             }
         }
         #endregion
@@ -1145,7 +1403,7 @@ namespace Aimbot
             }
             catch (Exception ex)
             {
-                return $"Error in test(): {ex.Message}";
+                return $"Error in Aimfov 90: {ex.Message}";
             }
         }
 
@@ -1186,10 +1444,304 @@ namespace Aimbot
             }
             catch (Exception ex)
             {
-                return $"Error in test(): {ex.Message}";
+                return $"Error in Aimfov 90: {ex.Message}";
             }
         }
         #endregion
+
+        #region WallHack
+
+        public static async Task<string> LoadWall()
+        {
+            try
+            {
+                var emulator = GetProcess.GetRunningEmulatorProcessName();
+                var narzo = new BRCMem();
+
+                if (!narzo.SetProcess(new string[] { emulator }))
+                    return "Failed to attach to emulator process.";
+
+                narzo.CheckProcess();
+
+                var matches = await narzo.AoBScan(wallSearch);
+                if (matches == null || !matches.Any())
+                    return "No Pattern Found";
+
+                WallAddress = matches.Select(addr => (ulong)addr).ToList();
+                return $"Wall Hack Loaded";
+            }
+            catch (Exception ex)
+            {
+                return $"Error in Load Wall: {ex.Message}";
+            }
+        }
+
+        public static async Task<string> EnableWall()
+        {
+            try
+            {
+                if (WallAddress == null || WallAddress.Count == 0)
+                    return "No loaded addresses";
+
+                var emulator = GetProcess.GetRunningEmulatorProcessName();
+                var narzo = new BRCMem();
+
+                if (!narzo.SetProcess(new string[] { emulator }))
+                    return "Failed to attach to emulator process.";
+
+                narzo.CheckProcess();
+
+                int replacedCount = 0;
+                foreach (var addr in WallAddress)
+                {
+                    try
+                    {
+                        if (narzo.AobReplace((long)addr, wallReplace))
+                            replacedCount++;
+                    }
+                    catch { }
+                }
+
+                return $"Wall Hack Enabled";
+            }
+            catch (Exception ex)
+            {
+                return $"Error in Enable Wall: {ex.Message}";
+            }
+        }
+
+        public static async Task<string> DisableWall()
+        {
+            try
+            {
+                if (WallAddress == null || WallAddress.Count == 0)
+                    return "No loaded addresses";
+
+                var emulator = GetProcess.GetRunningEmulatorProcessName();
+                var narzo = new BRCMem();
+
+                if (!narzo.SetProcess(new string[] { emulator }))
+                    return "Failed to attach to emulator process.";
+
+                narzo.CheckProcess();
+
+                int replacedCount = 0;
+                foreach (var addr in WallAddress)
+                {
+                    try
+                    {
+                        if (narzo.AobReplace((long)addr, wallSearch))
+                            replacedCount++;
+                    }
+                    catch { }
+                }
+
+                return $"Wall Hack Disabled";
+            }
+            catch (Exception ex)
+            {
+                return $"Error in Disable Wall: {ex.Message}";
+            }
+        }
+
+        #endregion
+
+        #region SpeedHack
+
+        public static async Task<string> LoadSpeed()
+        {
+            try
+            {
+                var emulator = GetProcess.GetRunningEmulatorProcessName();
+                var narzo = new BRCMem();
+
+                if (!narzo.SetProcess(new string[] { emulator }))
+                    return "Failed to attach to emulator process.";
+
+                narzo.CheckProcess();
+
+                var matches = await narzo.AoBScan(speedSearch);
+                if (matches == null || !matches.Any())
+                    return "No Pattern Found";
+
+                SpeedAddress = matches.Select(addr => (ulong)addr).ToList();
+                return $"Speed Hack Loaded";
+            }
+            catch (Exception ex)
+            {
+                return $"Error in Load Speed: {ex.Message}";
+            }
+        }
+
+        public static async  Task<string> EnableSpeed()
+        {
+            try
+            {
+                if (SpeedAddress == null || SpeedAddress.Count == 0)
+                    return "No loaded addresses";
+
+                var emulator = GetProcess.GetRunningEmulatorProcessName();
+                var narzo = new BRCMem();
+
+                if (!narzo.SetProcess(new string[] { emulator }))
+                    return "Failed to attach to emulator process.";
+
+                narzo.CheckProcess();
+
+                int replacedCount = 0;
+                foreach (var addr in SpeedAddress)
+                {
+                    try
+                    {
+                        if (narzo.AobReplace((long)addr, speedReplace))
+                            replacedCount++;
+                    }
+                    catch { }
+                }
+
+                return $"Speed Hack Enabled";
+            }
+            catch (Exception ex)
+            {
+                return $"Error in Enable Wall: {ex.Message}";
+            }
+        }
+
+        public static async  Task<string> DisableSpeed()
+        {
+            try
+            {
+                if (SpeedAddress == null || SpeedAddress.Count == 0)
+                    return "No loaded addresses";
+
+                var emulator = GetProcess.GetRunningEmulatorProcessName();
+                var narzo = new BRCMem();
+
+                if (!narzo.SetProcess(new string[] { emulator }))
+                    return "Failed to attach to emulator process.";
+
+                narzo.CheckProcess();
+
+                int replacedCount = 0;
+                foreach (var addr in SpeedAddress)
+                {
+                    try
+                    {
+                        if (narzo.AobReplace((long)addr, speedSearch))
+                            replacedCount++;
+                    }
+                    catch { }
+                }
+
+                return $"Speed Hack Disabled";
+            }
+            catch (Exception ex)
+            {
+                return $"Error in Disable Speed: {ex.Message}";
+            }
+        }
+
+        #endregion
+
+        #region Reset Guest
+        public static async Task<string> ResetGuest()
+        {
+            try
+            {
+                var emulator = GetProcess.GetRunningEmulatorProcessName();
+                var narzo = new BRCMem();
+
+                if (!narzo.SetProcess(new string[] { emulator }))
+                {
+                    return "Failed to attach to emulator process.";
+                }
+
+                narzo.CheckProcess();
+
+                var matches = await narzo.AoBScan(guestSearch);
+                if (matches == null || !matches.Any())
+                {
+                    return "No Pattern Found";
+                }
+
+                int replacedCount = 0;
+                foreach (var addr in matches)
+                {
+                    try
+                    {
+                        bool result = narzo.AobReplace(addr, guestReplace);
+                        if (result) replacedCount++;
+                    }
+                    catch
+                    {
+
+                    }
+                }
+                return "Guest Reset Success";
+            }
+            catch (Exception ex)
+            {
+                return $"Error in Guest: {ex.Message}";
+            }
+        }
+        #endregion
+
+        #endregion
+
+        #region DLL INJECTION SYSTEM
+        [DllImport("kernel32.dll", SetLastError = true)]
+        static extern IntPtr OpenProcess(uint processAccess, bool bInheritHandle, int processId);
+
+        [DllImport("kernel32.dll", SetLastError = true)]
+        static extern IntPtr GetProcAddress(IntPtr hModule, string lpProcName);
+
+        [DllImport("kernel32.dll", SetLastError = true)]
+        static extern bool CloseHandle(IntPtr hObject);
+
+        [DllImport("kernel32.dll", SetLastError = true)]
+        static extern IntPtr GetModuleHandle(string lpModuleName);
+
+        [DllImport("kernel32.dll", SetLastError = true)]
+        static extern IntPtr VirtualAllocEx(IntPtr hProcess, IntPtr lpAddress, IntPtr dwSize, uint flAllocationType, uint flProtect);
+
+        [DllImport("kernel32.dll", SetLastError = true)]
+        static extern bool WriteProcessMemory(IntPtr hProcess, IntPtr lpBaseAddress, byte[] lpBuffer, uint nSize, out IntPtr lpNumberOfBytesWritten);
+
+        [DllImport("kernel32.dll")]
+        static extern IntPtr CreateRemoteThread(IntPtr hProcess, IntPtr lpThreadAttribute, IntPtr dwStackSize, IntPtr lpStartAddress, IntPtr lpParameter, uint dwCreationFlags, IntPtr lpThreadId);
+
+        [DllImport("kernel32.dll", SetLastError = true)]
+        static extern IntPtr LoadLibraryA(string lpLibFileName);
+
+        [DllImport("kernel32.dll", SetLastError = true)]
+        static extern bool FreeLibrary(IntPtr hModule);
+
+        const uint PROCESS_CREATE_THREAD = 0x2;
+        const uint PROCESS_QUERY_INFORMATION = 0x400;
+        const uint PROCESS_VM_OPERATION = 0x8;
+        const uint PROCESS_VM_WRITE = 0x20;
+        const uint PROCESS_VM_READ = 0x10;
+        const uint MEM_COMMIT = 0x1000;
+        const uint PAGE_READWRITE = 4;
+
+        private static void inject(string resourceName, string outputPath)
+        {
+            Assembly executingAssembly = Assembly.GetExecutingAssembly();
+            using (Stream resourceStream = executingAssembly.GetManifestResourceStream(resourceName))
+            {
+                if (resourceStream == null)
+                {
+                    throw new ArgumentException($"Resource '{resourceName}' not found.");
+                }
+                using (FileStream fileStream = new FileStream(outputPath, FileMode.Create))
+                {
+                    byte[] buffer = new byte[resourceStream.Length];
+                    resourceStream.Read(buffer, 0, buffer.Length);
+                    fileStream.Write(buffer, 0, buffer.Length);
+                }
+            }
+        }
+
         #endregion
     }
 }
