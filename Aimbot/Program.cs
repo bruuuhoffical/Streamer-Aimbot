@@ -369,7 +369,12 @@ namespace Aimbot
                 if (req.HttpMethod == "POST" && path == "session")
                 {
                     bool active = CurrentUserId != null && (DateTime.UtcNow - LastAuth) < SessionTimeout;
-                    var respObj = new { active, username = CurrentUserId };
+                    var respObj = new
+                    {
+                        active,
+                        username = CurrentUsername ?? CurrentUserId,
+                        userId = CurrentUserId
+                    };
                     buf = Encoding.UTF8.GetBytes(JsonConvert.SerializeObject(respObj));
                     resp.ContentType = "application/json";
                     resp.OutputStream.Write(buf, 0, buf.Length);
@@ -443,8 +448,8 @@ namespace Aimbot
 
                             if (AuthlyXApp.response.success)
                             {
-                                CurrentUserId = AuthlyXApp.userData?.Username;
-                                CurrentUsername = AuthlyXApp.userData?.Username;
+                                CurrentUserId = AuthlyXApp.userData?.Username ?? AuthlyXApp.userData?.LicenseKey ?? licenseKey;
+                                CurrentUsername = AuthlyXApp.userData?.Username ?? "License User";
                                 LastAuth = DateTime.UtcNow;
 
                                 var respObj = new { success = true, message = "License login successful" };

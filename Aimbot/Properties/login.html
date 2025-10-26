@@ -86,8 +86,38 @@
             font-size: 14px;
         }
 
+        .tabs {
+            display: flex;
+            margin-bottom: 20px;
+            border-bottom: 1px solid var(--stroke);
+        }
+
+        .tab {
+            flex: 1;
+            text-align: center;
+            padding: 10px;
+            cursor: pointer;
+            font-weight: 500;
+            transition: all 0.3s ease;
+            border-bottom: 2px solid transparent;
+        }
+
+            .tab.active {
+                border-bottom: 2px solid var(--grad1);
+                color: var(--grad1);
+            }
+
+        .tab-content {
+            display: none;
+        }
+
+            .tab-content.active {
+                display: block;
+            }
+
         .form-group {
             margin-bottom: 20px;
+            position: relative;
         }
 
             .form-group label {
@@ -108,11 +138,33 @@
             transition: all 0.3s ease;
         }
 
-            .form-control:focus {
-                outline: none;
-                border-color: var(--grad1);
-                box-shadow: 0 0 0 2px rgba(139,92,246,.2);
-            }
+        .password-container {
+            position: relative;
+        }
+
+        .password-toggle {
+            position: absolute;
+            right: 12px;
+            top: 50%;
+            transform: translateY(-50%);
+            background: none;
+            border: none;
+            color: var(--muted);
+            cursor: pointer;
+            font-size: 16px;
+            padding: 0;
+            width: 20px;
+            height: 20px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .form-control:focus {
+            outline: none;
+            border-color: var(--grad1);
+            box-shadow: 0 0 0 2px rgba(139,92,246,.2);
+        }
 
         .btn {
             width: 100%;
@@ -242,7 +294,7 @@
                     <div class="dot"></div>
                     <h1>BRUUUH CHEATS</h1>
                 </div>
-                <p>Streamers Choice Version 3.1</p>
+                <p>Streamers Choice Version 3.3</p>
             </div>
 
             <div class="auto-login-notice" id="auto-login-notice">
@@ -256,24 +308,85 @@
                 Authenticating...
             </div>
 
-            <form id="login-form">
-                <div class="form-group">
-                    <label for="username">Username</label>
-                    <input type="text" id="username" class="form-control" placeholder="Enter your username" required>
-                </div>
+            <div class="tabs">
+                <div class="tab active" data-tab="login">Login</div>
+                <div class="tab" data-tab="license">License Login</div>
+                <div class="tab" data-tab="register">Register</div>
+            </div>
 
-                <div class="form-group">
-                    <label for="password">Password</label>
-                    <input type="password" id="password" class="form-control" placeholder="Enter your password" required>
-                </div>
+            <div class="tab-content active" id="login-tab">
+                <form id="login-form">
+                    <div class="form-group">
+                        <label for="username">Username</label>
+                        <input type="text" id="username" class="form-control" placeholder="Enter your username" required>
+                    </div>
 
-                <div class="remember-me">
-                    <input type="checkbox" id="remember-me">
-                    <label for="remember-me">Remember me</label>
-                </div>
+                    <div class="form-group">
+                        <label for="password">Password</label>
+                        <div class="password-container">
+                            <input type="password" id="password" class="form-control" placeholder="Enter your password" required>
+                            <button type="button" class="password-toggle" id="login-password-toggle">
+                                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                    <path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"></path>
+                                    <circle cx="12" cy="12" r="3"></circle>
+                                </svg>
+                            </button>
+                        </div>
+                    </div>
 
-                <button type="submit" class="btn" id="login-btn">Login</button>
-            </form>
+                    <div class="remember-me">
+                        <input type="checkbox" id="remember-me">
+                        <label for="remember-me">Remember me</label>
+                    </div>
+
+                    <button type="submit" class="btn" id="login-btn">Login</button>
+                </form>
+            </div>
+
+            <div class="tab-content" id="license-tab">
+                <form id="license-form">
+                    <div class="form-group">
+                        <label for="license-key">License Key</label>
+                        <input type="text" id="license-key" class="form-control" placeholder="Enter your license key" required>
+                    </div>
+
+                    <button type="submit" class="btn" id="license-btn">Login with License</button>
+                </form>
+            </div>
+
+            <div class="tab-content" id="register-tab">
+                <form id="register-form">
+                    <div class="form-group">
+                        <label for="reg-username">Username</label>
+                        <input type="text" id="reg-username" class="form-control" placeholder="Choose a username" required>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="reg-email">Email</label>
+                        <input type="email" id="reg-email" class="form-control" placeholder="Enter your email" required>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="reg-password">Password</label>
+                        <div class="password-container">
+                            <input type="password" id="reg-password" class="form-control" placeholder="Create a password" required>
+                            <button type="button" class="password-toggle" id="reg-password-toggle">
+                                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                    <path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"></path>
+                                    <circle cx="12" cy="12" r="3"></circle>
+                                </svg>
+                            </button>
+                        </div>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="reg-license">License Key</label>
+                        <input type="text" id="reg-license" class="form-control" placeholder="Enter your license key" required>
+                    </div>
+
+                    <button type="submit" class="btn" id="register-btn">Register Account</button>
+                </form>
+            </div>
 
             <div class="footer">
                 <p>Need help? Contact support</p>
@@ -282,14 +395,64 @@
     </div>
 
     <script>
+        const tabs = document.querySelectorAll('.tab');
+        const tabContents = document.querySelectorAll('.tab-content');
         const loginForm = document.getElementById('login-form');
+        const licenseForm = document.getElementById('license-form');
+        const registerForm = document.getElementById('register-form');
         const usernameInput = document.getElementById('username');
         const passwordInput = document.getElementById('password');
+        const licenseKeyInput = document.getElementById('license-key');
+        const regUsernameInput = document.getElementById('reg-username');
+        const regEmailInput = document.getElementById('reg-email');
+        const regPasswordInput = document.getElementById('reg-password');
+        const regLicenseInput = document.getElementById('reg-license');
         const rememberMeCheckbox = document.getElementById('remember-me');
         const messageDiv = document.getElementById('message');
         const loadingDiv = document.getElementById('loading');
         const loginBtn = document.getElementById('login-btn');
+        const licenseBtn = document.getElementById('license-btn');
+        const registerBtn = document.getElementById('register-btn');
         const autoLoginNotice = document.getElementById('auto-login-notice');
+        const loginPasswordToggle = document.getElementById('login-password-toggle');
+        const regPasswordToggle = document.getElementById('reg-password-toggle');
+
+        tabs.forEach(tab => {
+            tab.addEventListener('click', () => {
+                const tabId = tab.getAttribute('data-tab');
+
+                tabs.forEach(t => t.classList.remove('active'));
+                tab.classList.add('active');
+
+                tabContents.forEach(content => content.classList.remove('active'));
+                document.getElementById(`${tabId}-tab`).classList.add('active');
+
+                hideMessage();
+            });
+        });
+
+        function setupPasswordToggle(toggleBtn, passwordInput) {
+            toggleBtn.addEventListener('click', () => {
+                const type = passwordInput.getAttribute('type') === 'password' ? 'text' : 'password';
+                passwordInput.setAttribute('type', type);
+
+                const icon = toggleBtn.querySelector('svg');
+                if (type === 'text') {
+                    icon.innerHTML = `
+                            <path d="M17.94 17.94A10.07 10.07 0 0 1 12 20c-7 0-11-8-11-8a18.45 18.45 0 0 1 5.06-5.94M9.9 4.24A9.12 9.12 0 0 1 12 4c7 0 11 8 11 8a18.5 18.5 0 0 1-2.16 3.19m-6.72-1.07a3 3 0 1 1-4.24-4.24"></path>
+                            <line x1="1" y1="1" x2="23" y2="23"></line>
+                        `;
+                } else {
+                    icon.innerHTML = `
+                            <path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"></path>
+                            <circle cx="12" cy="12" r="3"></circle>
+                        `;
+                }
+            });
+        }
+
+        setupPasswordToggle(loginPasswordToggle, passwordInput);
+        setupPasswordToggle(regPasswordToggle, regPasswordInput);
 
         function showMessage(text, type) {
             messageDiv.textContent = text;
@@ -304,11 +467,15 @@
         function showLoading() {
             loadingDiv.style.display = 'block';
             loginBtn.disabled = true;
+            licenseBtn.disabled = true;
+            registerBtn.disabled = true;
         }
 
         function hideLoading() {
             loadingDiv.style.display = 'none';
             loginBtn.disabled = false;
+            licenseBtn.disabled = false;
+            registerBtn.disabled = false;
         }
 
         async function checkSession() {
@@ -333,7 +500,6 @@
                 return false;
             }
         }
-
 
         async function attemptAutoLogin() {
             const savedUsername = localStorage.getItem('bruuuh_username');
@@ -401,6 +567,61 @@
             }
         }
 
+        async function performLicenseLogin(licenseKey) {
+            try {
+                const response = await fetch('/licenselogin', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify({
+                        licenseKey: licenseKey
+                    })
+                });
+
+                const data = await response.json();
+
+                if (data.success) {
+                    return true;
+                } else {
+                    showMessage(data.message || 'License login failed. Please check your license key.', 'error');
+                    return false;
+                }
+            } catch (error) {
+                showMessage('Network error. Please check your connection.', 'error');
+                return false;
+            }
+        }
+
+        async function performRegister(username, email, password, licenseKey) {
+            try {
+                const response = await fetch('/register', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify({
+                        username: username,
+                        email: email,
+                        password: password,
+                        licenseKey: licenseKey
+                    })
+                });
+
+                const data = await response.json();
+
+                if (data.success) {
+                    return true;
+                } else {
+                    showMessage(data.message || 'Registration failed. Please check your information.', 'error');
+                    return false;
+                }
+            } catch (error) {
+                showMessage('Network error. Please check your connection.', 'error');
+                return false;
+            }
+        }
+
         loginForm.addEventListener('submit', async (e) => {
             e.preventDefault();
 
@@ -422,6 +643,63 @@
                 setTimeout(() => {
                     window.location.href = '/main';
                 }, 1000);
+            } else {
+                hideLoading();
+            }
+        });
+
+        licenseForm.addEventListener('submit', async (e) => {
+            e.preventDefault();
+
+            const licenseKey = licenseKeyInput.value.trim();
+
+            if (!licenseKey) {
+                showMessage('Please enter your license key.', 'error');
+                return;
+            }
+
+            hideMessage();
+            showLoading();
+
+            const success = await performLicenseLogin(licenseKey);
+
+            if (success) {
+                showMessage('License login successful! Redirecting...', 'success');
+                setTimeout(() => {
+                    window.location.href = '/main';
+                }, 1000);
+            } else {
+                hideLoading();
+            }
+        });
+
+        registerForm.addEventListener('submit', async (e) => {
+            e.preventDefault();
+
+            const username = regUsernameInput.value.trim();
+            const email = regEmailInput.value.trim();
+            const password = regPasswordInput.value.trim();
+            const licenseKey = regLicenseInput.value.trim();
+
+            if (!username || !email || !password || !licenseKey) {
+                showMessage('Please fill in all fields.', 'error');
+                return;
+            }
+
+            hideMessage();
+            showLoading();
+
+            const success = await performRegister(username, email, password, licenseKey);
+
+            if (success) {
+                showMessage('Registration successful! You can now login.', 'success');
+                setTimeout(() => {
+                    tabs.forEach(t => t.classList.remove('active'));
+                    document.querySelector('.tab[data-tab="login"]').classList.add('active');
+                    tabContents.forEach(content => content.classList.remove('active'));
+                    document.getElementById('login-tab').classList.add('active');
+                    hideLoading();
+                }, 2000);
             } else {
                 hideLoading();
             }
