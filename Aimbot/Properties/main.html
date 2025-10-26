@@ -475,273 +475,366 @@
                 background: linear-gradient(90deg, rgba(139,92,246,.28), rgba(34,211,238,.28));
                 color: #fff
             }
+
+        .auth-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: var(--bg1);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            z-index: 1000;
+        }
+
+        .auth-card {
+            background: linear-gradient(180deg,var(--glass), rgba(255,255,255,.03));
+            border: 1px solid var(--stroke);
+            border-radius: 16px;
+            padding: 30px;
+            box-shadow: 0 12px 32px rgba(0,0,0,.35);
+            backdrop-filter: blur(10px);
+            max-width: 400px;
+            width: 90%;
+            text-align: center;
+        }
+
+        .auth-message {
+            margin: 20px 0;
+            color: var(--muted);
+        }
+
+        .auth-btn {
+            padding: 12px 24px;
+            background: linear-gradient(45deg,var(--grad1),var(--grad2));
+            border: none;
+            border-radius: 8px;
+            color: white;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+            .auth-btn:hover {
+                transform: translateY(-2px);
+                box-shadow: 0 8px 20px rgba(139,92,246,.3);
+            }
     </style>
 </head>
 <body>
-    <div id="particles-js"></div>
-    <div class="container">
-        <div class="card">
-            <div class="header">
-                <div class="brand"><div class="dot"></div><h2>BRUUUH CHEATS</h2></div>
-                <h3>Streamers Choice Version 3.3</h3>
+    <div id="auth-overlay" class="auth-overlay" style="display: none;">
+        <div class="auth-card">
+            <div class="brand" style="margin-bottom: 20px;">
+                <div class="dot"></div>
+                <h2>BRUUUH CHEATS</h2>
             </div>
+            <div class="auth-message" id="auth-message">Checking authentication...</div>
+            <button class="auth-btn" onclick="redirectToLogin()">Go to Login</button>
+        </div>
+    </div>
 
-            <div class="status">
-                <div>Status: <span class="online">Online</span> • V3.3</div>
-                <div>Connected to: Emulator</div>
-            </div>
-
-            <div class="row">
-                <label>Emulator Architecture</label>
-                <div class="seg" id="mode-seg">
-                    <button type="button" class="active" data-type="32-Bit">32-Bit</button>
-                    <button type="button" data-type="64-Bit">64-Bit</button>
+    <div id="main-content">
+        <div id="particles-js"></div>
+        <div class="container">
+            <div class="card">
+                <div class="header">
+                    <div class="brand"><div class="dot"></div><h2>BRUUUH CHEATS</h2></div>
+                    <h3>Streamers Choice Version 3.3</h3>
                 </div>
-            </div>
 
+                <div class="status">
+                    <div>Status: <span class="online">Online</span> • V3.3</div>
+                    <div>Connected to: Emulator</div>
+                </div>
 
-            <div class="tabs">
-                <button class="active" data-tab="tab-aimbot">Headshot</button>
-                <button data-tab="tab-visuals">Visuals</button>
-                <button data-tab="tab-sniper">Sniper</button>
-                <button data-tab="tab-extras">Extras</button>
-                <button data-tab="tab-settings">Settings</button>
-            </div>
-
-            <div class="tab-content active" id="tab-aimbot">
-
-                <div class="panel">
-                    <div class="stack">
-                        <div class="title">Aimbot Mode</div>
-                        <div class="hint">Select Aimbot Type</div>
+                <div class="row">
+                    <label>Emulator Architecture</label>
+                    <div class="seg" id="mode-seg">
+                        <button type="button" class="active" data-type="32-Bit">32-Bit</button>
+                        <button type="button" data-type="64-Bit">64-Bit</button>
                     </div>
-                    <div style="display:flex; gap:10px; align-items:center; justify-content:flex-end; width:50%">
-                        <div class="combo" id="emu-combo">
-                            <button class="combo-trigger" id="emu-trigger" aria-haspopup="listbox" aria-expanded="false">
-                                <span id="emu-label">Aimbot Head</span>
-                                <svg viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M7 10l5 5 5-5" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" /></svg>
-                            </button>
-                            <div class="combo-menu" id="emu-menu" role="listbox">
-                                <button class="combo-option selected" role="option" data-value="aimbotenable">Aimbot Head</button>
-                                <button class="combo-option" role="option" data-value="aimDrag">Aimbot Drag</button>
-                                <button class="combo-option" role="option" data-value="aimDragPro">Aimbot Drag Pro</button>
-                                <button class="combo-option" role="option" data-value="aimAI">Aimbot AI</button>
+                </div>
+
+                <div class="tabs">
+                    <button class="active" data-tab="tab-aimbot">Headshot</button>
+                    <button data-tab="tab-visuals">Visuals</button>
+                    <button data-tab="tab-sniper">Sniper</button>
+                    <button data-tab="tab-extras">Extras</button>
+                    <button data-tab="tab-settings">Settings</button>
+                </div>
+
+                <div class="tab-content active" id="tab-aimbot">
+                    <div class="panel">
+                        <div class="stack">
+                            <div class="title">Aimbot Mode</div>
+                            <div class="hint">Select Aimbot Type</div>
+                        </div>
+                        <div style="display:flex; gap:10px; align-items:center; justify-content:flex-end; width:50%">
+                            <div class="combo" id="emu-combo">
+                                <button class="combo-trigger" id="emu-trigger" aria-haspopup="listbox" aria-expanded="false">
+                                    <span id="emu-label">Aimbot Head</span>
+                                    <svg viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M7 10l5 5 5-5" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" /></svg>
+                                </button>
+                                <div class="combo-menu" id="emu-menu" role="listbox">
+                                    <button class="combo-option selected" role="option" data-value="aimbotenable">Aimbot Head</button>
+                                    <button class="combo-option" role="option" data-value="aimDrag">Aimbot Drag</button>
+                                    <button class="combo-option" role="option" data-value="aimDragPro">Aimbot Drag Pro</button>
+                                    <button class="combo-option" role="option" data-value="aimAI">Aimbot AI</button>
+                                </div>
                             </div>
                         </div>
                     </div>
-                </div>
 
-                <div class="panel">
-                    <div class="stack"><div class="title">Aimbot Switch</div><div class="hint">Turn aimbot ON/OFF</div></div>
-                    <div style="display:flex; gap:8px">
-                        <button class="btn" id="aimbot-on-btn" data-cmd="aimbotheadon">ON</button>
-                        <button class="btn ghost" id="aimbot-off-btn" data-cmd="aimbotheadoff">OFF</button>
-                    </div>
-                </div>
-
-                <div class="panel">
-                    <div class="stack"><div class="title">No Recoil</div><div class="hint">Reduces Weapons Recoil by 99.999%</div></div>
-                    <button class="btn" data-cmd="norecoilon">On</button>
-                    <button class="btn" data-cmd="norecoiloff">Off</button>
-                </div>
-
-                <div class="panel">
-                    <div class="stack"><div class="title">Scope Tracking 2X</div><div class="hint">Tracks Enemy on Scope Weapons</div></div>
-                    <button class="btn" data-cmd="scopetracking2x">On</button>
-                    <button class="btn" data-cmd="scopetrackingoff2x">Off</button>
-                </div>
-                <div class="panel">
-                    <div class="stack"><div class="title">Scope Tracking 4X</div><div class="hint">Tracks Enemy on Scope Weapons</div></div>
-                    <button class="btn" data-cmd="scopetracking4x">On</button>
-                    <button class="btn" data-cmd="scopetrackingoff4x">Off</button>
-                </div>
-                <div class="panel">
-                    <div class="stack"><div class="title">Female to Male</div><div class="hint">Converts all Female to Male</div></div>
-                    <button class="btn" data-cmd="f2mon">On</button>
-                    <button class="btn" data-cmd="f2moff">Off</button>
-                </div>
-            </div>
-
-            <div class="tab-content active" id="tab-visuals">
-
-                <div class="panel">
-                    <div class="stack"><div class="title">Chams Start</div><div class="hint">Enable This to use any chams below</div></div>
-                    <button class="btn" data-cmd="chamsstart">Inject</button>
-                </div>
-                
-                <div class="panel">
-                    <div class="stack"><div class="title">Chams Menu V1</div><div class="hint">Modern Chams Menu UI for enemy location</div></div>
-                    <button class="btn" data-cmd="chamsmenunew">Inject</button>
-                </div>
-
-                <div class="panel">
-                    <div class="stack"><div class="title">Chams Menu V2</div><div class="hint">Old Chams Menu UI for enemy location</div></div>
-                    <button class="btn" data-cmd="chamsmenuold">Inject</button>
-                </div>
-                <div class="panel">
-                    <div class="stack"><div class="title">Chams 3D</div><div class="hint">Make Enemies Visible Through Walls</div></div>
-                    <button class="btn" data-cmd="chams3d">Inject</button>
-                </div>
-                <div class="panel">
-                    <div class="stack"><div class="title">HDR Map</div><div class="hint">Make game Quality HD+</div></div>
-                    <button class="btn" data-cmd="chamshdr">Inject</button>
-                </div>
-            </div>
-
-            <div class="tab-content active" id="tab-sniper">
-
-                <div class="panel">
-                    <div class="stack"><div class="title">Sniper Aim ⚠️</div><div class="hint">Turns Sniper to AR Weapoon</div></div>
-                    <button class="btn" data-cmd="sniperaimon">On</button>
-                    <button class="btn" data-cmd="sniperaimoff">Off</button>
-                </div>
-
-                <div class="panel">
-                    <div class="stack"><div class="title">Sniper Switch ⚠️</div><div class="hint">Reduce Sniper Switch Time</div></div>
-                    <button class="btn" data-cmd="sniperswitchon">On</button>
-                    <button class="btn" data-cmd="sniperswitchoff">Off</button>
-                </div>
-                <div class="panel">
-                    <div class="stack"><div class="title">Sniper Location [AWMY]</div><div class="hint">Shows Sniper and Sniper Ammo Location</div></div>
-                    <button class="btn" data-cmd="awmylocationon">On</button>
-                    <button class="btn" data-cmd="awmylocationoff">Off</button>
-                </div>
-                <div class="panel">
-                    <div class="stack"><div class="title">Sniper Location [M82B]</div><div class="hint">Shows Sniper and Sniper Ammo Location</div></div>
-                    <button class="btn" data-cmd="m82blocationon">On</button>
-                    <button class="btn" data-cmd="m82blocationoff">Off</button>
-                </div>
-                <div class="panel">
-                    <div class="stack"><div class="title">Sniper Location [M24]</div><div class="hint">Shows Sniper and Sniper Ammo Location</div></div>
-                    <button class="btn" data-cmd="m24locationon">On</button>
-                    <button class="btn" data-cmd="m24locationoff">Off</button>
-                </div>
-                <div class="panel">
-                    <div class="stack"><div class="title">Sniper Location [VSK]</div><div class="hint">Shows Sniper and Sniper Ammo Location</div></div>
-                    <button class="btn" data-cmd="vsklocationon">On</button>
-                    <button class="btn" data-cmd="vsklocationoff">Off</button>
-                </div>
-            </div>
-
-            <div class="tab-content active" id="tab-extras">
-
-                <div class="panel">
-                    <div class="stack"><div class="title">Aim Fov [90]</div><div class="hint">Aim At Nearest Enemy within 90 Degree on Shoot</div></div>
-                    <button class="btn" data-cmd="aimfovon">On</button>
-                    <button class="btn" data-cmd="aimfovoff">Off</button>
-                </div>
-
-                <div class="panel">
-                    <div class="stack"><div class="title">Wall Hack</div><div class="hint">Walk or Sprint Through Walls</div></div>
-                    <button class="btn" data-cmd="wallload">Load</button>
-                    <button class="btn" data-cmd="wallon">On</button>
-                    <button class="btn" data-cmd="walloff">Off</button>
-                </div>
-                
-                <div class="panel">
-                    <div class="stack"><div class="title">Speed Hack</div><div class="hint">Increase Movement Speed</div></div>
-                    <button class="btn" data-cmd="speedload">Load</button>
-                    <button class="btn" data-cmd="speedon">On</button>
-                    <button class="btn" data-cmd="speedoff">Off</button>
-                </div>
-
-                <div class="panel">
-                    <div class="stack"><div class="title">Reset Guest</div><div class="hint">Reset Guest account without reinstalling game</div></div>
-                    <button class="btn" data-cmd="resetguest">Reset</button>
-                </div>
-
-            </div>
-
-            <div class="tab-content" id="tab-settings">
-                <div class="panel" id="global-input-device-panel">
-                    <div class="stack">
-                        <div class="title">Input Device</div>
-                        <div class="hint">Switch once — all hotkey pickers update</div>
-                    </div>
-                    <div class="seg" id="input-device-seg">
-                        <button type="button" class="active" data-type="keyboard">Keyboard</button>
-                        <button type="button" data-type="mouse">Mouse</button>
-                    </div>
-                </div>
-
-                <div class="panel">
-                    <div class="stack">
-                        <div class="title">Scan Aimbot Hotkey</div>
-                        <div class="hint">Choose trigger</div>
-                    </div>
-                    <div style="display:flex; align-items:center; gap:8px; justify-content:flex-end; width:50%">
-                        <div class="combo hotkey-combo" data-index="2">
-                            <button class="combo-trigger" aria-haspopup="listbox" aria-expanded="false">
-                                <span class="combo-label">None</span>
-                                <svg viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M7 10l5 5 5-5" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" /></svg>
-                            </button>
-                            <div class="combo-menu" role="listbox"></div>
+                    <div class="panel">
+                        <div class="stack"><div class="title">Aimbot Switch</div><div class="hint">Turn aimbot ON/OFF</div></div>
+                        <div style="display:flex; gap:8px">
+                            <button class="btn" id="aimbot-on-btn" data-cmd="aimbotheadon">ON</button>
+                            <button class="btn ghost" id="aimbot-off-btn" data-cmd="aimbotheadoff">OFF</button>
                         </div>
                     </div>
+
+                    <div class="panel">
+                        <div class="stack"><div class="title">No Recoil</div><div class="hint">Reduces Weapons Recoil by 99.999%</div></div>
+                        <button class="btn" data-cmd="norecoilon">On</button>
+                        <button class="btn" data-cmd="norecoiloff">Off</button>
+                    </div>
+
+                    <div class="panel">
+                        <div class="stack"><div class="title">Scope Tracking 2X</div><div class="hint">Tracks Enemy on Scope Weapons</div></div>
+                        <button class="btn" data-cmd="scopetracking2x">On</button>
+                        <button class="btn" data-cmd="scopetrackingoff2x">Off</button>
+                    </div>
+                    <div class="panel">
+                        <div class="stack"><div class="title">Scope Tracking 4X</div><div class="hint">Tracks Enemy on Scope Weapons</div></div>
+                        <button class="btn" data-cmd="scopetracking4x">On</button>
+                        <button class="btn" data-cmd="scopetrackingoff4x">Off</button>
+                    </div>
+                    <div class="panel">
+                        <div class="stack"><div class="title">Female to Male</div><div class="hint">Converts all Female to Male</div></div>
+                        <button class="btn" data-cmd="f2mon">On</button>
+                        <button class="btn" data-cmd="f2moff">Off</button>
+                    </div>
                 </div>
 
-                <div class="panel">
-                    <div class="stack">
-                        <div class="title">Aimbot Hotkey</div>
-                        <div class="hint">Bind a key to Change Mode</div>
+                <div class="tab-content" id="tab-visuals">
+                    <div class="panel">
+                        <div class="stack"><div class="title">Chams Start</div><div class="hint">Enable This to use any chams below</div></div>
+                        <button class="btn" data-cmd="chamsstart">Inject</button>
                     </div>
-                    <div style="display:flex; align-items:center; gap:8px; justify-content:flex-end; width:50%">
-                        <div class="combo hotkey-combo" data-index="3">
-                            <button class="combo-trigger" aria-haspopup="listbox" aria-expanded="false">
-                                <span class="combo-label">None</span>
-                                <svg viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M7 10l5 5 5-5" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" /></svg>
-                            </button>
-                            <div class="combo-menu" role="listbox"></div>
+
+                    <div class="panel">
+                        <div class="stack"><div class="title">Chams Menu V1</div><div class="hint">Modern Chams Menu UI for enemy location</div></div>
+                        <button class="btn" data-cmd="chamsmenunew">Inject</button>
+                    </div>
+
+                    <div class="panel">
+                        <div class="stack"><div class="title">Chams Menu V2</div><div class="hint">Old Chams Menu UI for enemy location</div></div>
+                        <button class="btn" data-cmd="chamsmenuold">Inject</button>
+                    </div>
+                    <div class="panel">
+                        <div class="stack"><div class="title">Chams 3D</div><div class="hint">Make Enemies Visible Through Walls</div></div>
+                        <button class="btn" data-cmd="chams3d">Inject</button>
+                    </div>
+                    <div class="panel">
+                        <div class="stack"><div class="title">HDR Map</div><div class="hint">Make game Quality HD+</div></div>
+                        <button class="btn" data-cmd="chamshdr">Inject</button>
+                    </div>
+                </div>
+
+                <div class="tab-content" id="tab-sniper">
+                    <div class="panel">
+                        <div class="stack"><div class="title">Sniper Aim ⚠️</div><div class="hint">Turns Sniper to AR Weapoon</div></div>
+                        <button class="btn" data-cmd="sniperaimon">On</button>
+                        <button class="btn" data-cmd="sniperaimoff">Off</button>
+                    </div>
+
+                    <div class="panel">
+                        <div class="stack"><div class="title">Sniper Switch ⚠️</div><div class="hint">Reduce Sniper Switch Time</div></div>
+                        <button class="btn" data-cmd="sniperswitchon">On</button>
+                        <button class="btn" data-cmd="sniperswitchoff">Off</button>
+                    </div>
+                    <div class="panel">
+                        <div class="stack"><div class="title">Sniper Location [AWMY]</div><div class="hint">Shows Sniper and Sniper Ammo Location</div></div>
+                        <button class="btn" data-cmd="awmylocationon">On</button>
+                        <button class="btn" data-cmd="awmylocationoff">Off</button>
+                    </div>
+                    <div class="panel">
+                        <div class="stack"><div class="title">Sniper Location [M82B]</div><div class="hint">Shows Sniper and Sniper Ammo Location</div></div>
+                        <button class="btn" data-cmd="m82blocationon">On</button>
+                        <button class="btn" data-cmd="m82blocationoff">Off</button>
+                    </div>
+                    <div class="panel">
+                        <div class="stack"><div class="title">Sniper Location [M24]</div><div class="hint">Shows Sniper and Sniper Ammo Location</div></div>
+                        <button class="btn" data-cmd="m24locationon">On</button>
+                        <button class="btn" data-cmd="m24locationoff">Off</button>
+                    </div>
+                    <div class="panel">
+                        <div class="stack"><div class="title">Sniper Location [VSK]</div><div class="hint">Shows Sniper and Sniper Ammo Location</div></div>
+                        <button class="btn" data-cmd="vsklocationon">On</button>
+                        <button class="btn" data-cmd="vsklocationoff">Off</button>
+                    </div>
+                </div>
+
+                <div class="tab-content" id="tab-extras">
+                    <div class="panel">
+                        <div class="stack"><div class="title">Aim Fov [90]</div><div class="hint">Aim At Nearest Enemy within 90 Degree on Shoot</div></div>
+                        <button class="btn" data-cmd="aimfovon">On</button>
+                        <button class="btn" data-cmd="aimfovoff">Off</button>
+                    </div>
+
+                    <div class="panel">
+                        <div class="stack"><div class="title">Wall Hack</div><div class="hint">Walk or Sprint Through Walls</div></div>
+                        <button class="btn" data-cmd="wallload">Load</button>
+                        <button class="btn" data-cmd="wallon">On</button>
+                        <button class="btn" data-cmd="walloff">Off</button>
+                    </div>
+
+                    <div class="panel">
+                        <div class="stack"><div class="title">Speed Hack</div><div class="hint">Increase Movement Speed</div></div>
+                        <button class="btn" data-cmd="speedload">Load</button>
+                        <button class="btn" data-cmd="speedon">On</button>
+                        <button class="btn" data-cmd="speedoff">Off</button>
+                    </div>
+
+                    <div class="panel">
+                        <div class="stack"><div class="title">Reset Guest</div><div class="hint">Reset Guest account without reinstalling game</div></div>
+                        <button class="btn" data-cmd="resetguest">Reset</button>
+                    </div>
+                </div>
+
+                <div class="tab-content" id="tab-settings">
+                    <div class="panel" id="global-input-device-panel">
+                        <div class="stack">
+                            <div class="title">Input Device</div>
+                            <div class="hint">Switch once — all hotkey pickers update</div>
+                        </div>
+                        <div class="seg" id="input-device-seg">
+                            <button type="button" class="active" data-type="keyboard">Keyboard</button>
+                            <button type="button" data-type="mouse">Mouse</button>
                         </div>
                     </div>
-                </div>
 
-                <div class="panel">
-                    <div class="stack"><div class="title">Clear Console</div><div class="hint">Remove previous logs</div></div>
-                    <button class="btn ghost" id="clear-log">Clear</button>
-                </div>
-
-                <div class="panel">
-                    <div class="stack"><div class="title">Exit Application</div><div class="hint">Shutdown this current application</div></div>
-                    <button class="btn" data-cmd="exit">Exit</button>
-                </div>
-
-                <div class="panel">
-                    <div class="stack"><div class="title">Restart Application</div><div class="hint">Restart this current application</div></div>
-                    <button class="btn" data-cmd="exit">Restart</button>
-                </div>
-            </div>
-
-
-
-            <div class="console-wrap">
-                <div class="console-head">
-                    <div style="display:flex; align-items:center; gap:8px;">
-                        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" style="color:var(--grad2);">
-                            <rect x="2" y="3" width="20" height="14" rx="2" ry="2" stroke="currentColor" stroke-width="2" />
-                            <line x1="8" y1="21" x2="16" y2="21" stroke="currentColor" stroke-width="2" />
-                            <line x1="12" y1="17" x2="12" y2="21" stroke="currentColor" stroke-width="2" />
-                        </svg>
-                        Console
+                    <div class="panel">
+                        <div class="stack">
+                            <div class="title">Scan Aimbot Hotkey</div>
+                            <div class="hint">Choose trigger</div>
+                        </div>
+                        <div style="display:flex; align-items:center; gap:8px; justify-content:flex-end; width:50%">
+                            <div class="combo hotkey-combo" data-index="2">
+                                <button class="combo-trigger" aria-haspopup="listbox" aria-expanded="false">
+                                    <span class="combo-label">None</span>
+                                    <svg viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M7 10l5 5 5-5" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" /></svg>
+                                </button>
+                                <div class="combo-menu" role="listbox"></div>
+                            </div>
+                        </div>
                     </div>
-                    <button class="console-clear" id="console-clear" title="Clear Console">
-                        <svg width="12" height="12" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-                            <path d="M3 6h18M8 6V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" />
-                        </svg>
-                        Clear
-                    </button>
+
+                    <div class="panel">
+                        <div class="stack">
+                            <div class="title">Aimbot Hotkey</div>
+                            <div class="hint">Bind a key to Change Mode</div>
+                        </div>
+                        <div style="display:flex; align-items:center; gap:8px; justify-content:flex-end; width:50%">
+                            <div class="combo hotkey-combo" data-index="3">
+                                <button class="combo-trigger" aria-haspopup="listbox" aria-expanded="false">
+                                    <span class="combo-label">None</span>
+                                    <svg viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M7 10l5 5 5-5" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" /></svg>
+                                </button>
+                                <div class="combo-menu" role="listbox"></div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="panel">
+                        <div class="stack"><div class="title">Clear Console</div><div class="hint">Remove previous logs</div></div>
+                        <button class="btn ghost" id="clear-log">Clear</button>
+                    </div>
+
+                    <div class="panel">
+                        <div class="stack"><div class="title">Exit Application</div><div class="hint">Shutdown this current application</div></div>
+                        <button class="btn" data-cmd="exit">Exit</button>
+                    </div>
+
+                    <div class="panel">
+                        <div class="stack"><div class="title">Restart Application</div><div class="hint">Restart this current application</div></div>
+                        <button class="btn" data-cmd="restart">Restart</button>
+                    </div>
                 </div>
-                <div class="console" id="log"></div>
+
+                <div class="console-wrap">
+                    <div class="console-head">
+                        <div style="display:flex; align-items:center; gap:8px;">
+                            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" style="color:var(--grad2);">
+                                <rect x="2" y="3" width="20" height="14" rx="2" ry="2" stroke="currentColor" stroke-width="2" />
+                                <line x1="8" y1="21" x2="16" y2="21" stroke="currentColor" stroke-width="2" />
+                                <line x1="12" y1="17" x2="12" y2="21" stroke="currentColor" stroke-width="2" />
+                            </svg>
+                            Console
+                        </div>
+                        <button class="console-clear" id="console-clear" title="Clear Console">
+                            <svg width="12" height="12" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                                <path d="M3 6h18M8 6V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" />
+                            </svg>
+                            Clear
+                        </button>
+                    </div>
+                    <div class="console" id="log"></div>
+                </div>
             </div>
         </div>
-
     </div>
+
     <script>
         particlesJS('particles-js', { particles: { number: { value: 70 }, size: { value: 2.3 }, move: { speed: 1.6 } } });
 
         const $ = s => document.querySelector(s);
         const $$ = s => Array.from(document.querySelectorAll(s));
         const logEl = $('#log');
+        const authOverlay = $('#auth-overlay');
+        const authMessage = $('#auth-message');
+        const mainContent = $('#main-content');
+
+        function showAuthOverlay(message) {
+            authMessage.textContent = message;
+            authOverlay.style.display = 'flex';
+            mainContent.style.display = 'none';
+        }
+
+        function hideAuthOverlay() {
+            authOverlay.style.display = 'none';
+            mainContent.style.display = 'block';
+        }
+
+        function redirectToLogin() {
+            window.location.href = '/login';
+        }
+
+        async function checkSession() {
+            try {
+                const response = await fetch('/session', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    }
+                });
+
+                const data = await response.json();
+
+                if (data.active) {
+                    hideAuthOverlay();
+                    return true;
+                } else {
+                    showAuthOverlay('Session expired. Please login again.');
+                    return false;
+                }
+            } catch (error) {
+                showAuthOverlay('Authentication check failed. Please login.');
+                return false;
+            }
+        }
 
         function log(text, cls) {
             const line = document.createElement('div');
@@ -753,63 +846,40 @@
             while (logEl.children.length > 120) logEl.removeChild(logEl.firstChild);
         }
 
-        //function sendCommand(cmd, { quietNetworkError = true } = {}) {
-        //  log(`Please Wait...`);
-        //  fetch(window.location.origin + '/', { method: 'POST', body: cmd })
-        //    .then(r => r.text())
-        //    .then(() => {
-        //      if (cmd === 'aimbotenable') log('Headshot Enabled : Head', 'ok');
-        //      if (cmd === 'enableAimDrag') log('Headshot Enabled : Drag', 'ok');
-        //      if (cmd === 'enableAimDragPro') log('Headshot Enabled : Drag Pro ', 'ok');
-        //      if (cmd === 'aimbotscan') log('Scan Complete', 'ok');
-        //      if (cmd === 'aimbotenable') log('Headshot Enabled', 'ok');
-        //      if (cmd === 'aimbotdisable') log('Headshot Disabled', 'warn');
-
-        //      if (cmd === 'EnableNoRecoil') log('No Recoil Enabled', 'ok');
-        //      if (cmd === 'DisableNoRecoil') log('No Recoil Disabled', 'warn');
-        //      if (cmd === 'EnableScopeTracking2X') log('Scope Tracking 2X Enabled', 'ok');
-        //      if (cmd === 'DisableScopeTracking2X') log('Scope Tracking 2X Disabled', 'warn');
-
-
-        //      if (cmd === 'SetArch') log(`Emulator Architecture synced`, 'ok');
-        //      if (cmd.startsWith('Enable')) log(`${cmd} sent`, 'ok');
-        //      if (cmd.startsWith('Disable')) log(`${cmd} sent`, 'warn');
-        //    })
-        //    .catch(() => {
-        //      if (!quietNetworkError) log('Network error while sending command', 'err');
-        //      else log('No server connection detected', 'warn');
-        //    });
-        //}
         function sendCommand(cmd, { quietNetworkError = true } = {}) {
-            log(`Please Wait...`);
-            fetch(window.location.origin + '/', { method: 'POST', body: cmd })
-                .then(r => r.text())
-                .then((feedback) => {
-                    if (feedback && feedback.trim().length > 0) {
-                        let cl = '';
-                        if (/error|fail|unknown|not\s+found|invalid/i.test(feedback)) cl = 'err';
-                        else if (/disabled|off|clear/i.test(feedback)) cl = 'warn';
-                        else if (/enabled|saved|scan|success|ok/i.test(feedback)) cl = 'ok';
-                        log(feedback, cl);
-                    } else {
-                        if (cmd === 'aimbotenable') log('Headshot Enabled : Head', 'ok');
-                        if (cmd === 'enableAimDrag') log('Headshot Enabled : Drag', 'ok');
-                        if (cmd === 'enableAimDragPro') log('Headshot Enabled : Drag Pro ', 'ok');
-                        if (cmd === 'aimbotscan') log('Scan Complete', 'ok');
-                        if (cmd === 'aimbotdisable') log('Headshot Disabled', 'warn');
-                        if (cmd === 'EnableNoRecoil') log('No Recoil Enabled', 'ok');
-                        if (cmd === 'DisableNoRecoil') log('No Recoil Disabled', 'warn');
-                        if (cmd === 'EnableScopeTracking2X') log('Scope Tracking 2X Enabled', 'ok');
-                        if (cmd === 'DisableScopeTracking2X') log('Scope Tracking 2X Disabled', 'warn');
-                        if (cmd === 'SetArch') log(`Emulator Architecture synced`, 'ok');
-                        if (cmd.startsWith('Enable')) log(`${cmd} sent`, 'ok');
-                        if (cmd.startsWith('Disable')) log(`${cmd} sent`, 'warn');
-                    }
-                })
-                .catch(() => {
-                    if (!quietNetworkError) log('Network error while sending command', 'err');
-                    else log('No server connection detected', 'warn');
-                });
+            checkSession().then(authenticated => {
+                if (!authenticated) {
+                    log('Authentication required. Please login.', 'err');
+                    return;
+                }
+
+                log(`Please Wait...`);
+                fetch(window.location.origin + '/', { method: 'POST', body: cmd })
+                    .then(r => r.text())
+                    .then((feedback) => {
+                        if (feedback && feedback.trim().length > 0) {
+                            let cl = '';
+                            if (/error|fail|unknown|not\s+found|invalid/i.test(feedback)) cl = 'err';
+                            else if (/disabled|off|clear/i.test(feedback)) cl = 'warn';
+                            else if (/enabled|saved|scan|success|ok/i.test(feedback)) cl = 'ok';
+                            log(feedback, cl);
+                        } else {
+                            if (cmd === 'aimbotheadon') log('Headshot Enabled : Head', 'ok');
+                            if (cmd === 'aimbotdragon') log('Headshot Enabled : Drag', 'ok');
+                            if (cmd === 'aimbotdragproon') log('Headshot Enabled : Drag Pro ', 'ok');
+                            if (cmd === 'norecoilon') log('No Recoil Enabled', 'ok');
+                            if (cmd === 'norecoiloff') log('No Recoil Disabled', 'warn');
+                            if (cmd === 'scopetracking2x') log('Scope Tracking 2X Enabled', 'ok');
+                            if (cmd === 'scopetrackingoff2x') log('Scope Tracking 2X Disabled', 'warn');
+                            if (cmd === 'scopetracking4x') log('Scope Tracking 4X Enabled', 'ok');
+                            if (cmd === 'scopetrackingoff4x') log('Scope Tracking 4X Disabled', 'warn');
+                        }
+                    })
+                    .catch(() => {
+                        if (!quietNetworkError) log('Network error while sending command', 'err');
+                        else log('No server connection detected', 'warn');
+                    });
+            });
         }
 
         function renderStatus(online, connectedTo, pid) {
@@ -840,21 +910,30 @@
         }
 
         setInterval(() => {
-            fetchStatus()
-                .then(data => renderStatus(data.online, data.connectedTo, data.pid))
-                .catch(err => {
-                    console.error('Status fetch failed:', err);
-                    renderStatus(false, null, 0);
-                });
+            checkSession().then(authenticated => {
+                if (authenticated) {
+                    fetchStatus()
+                        .then(data => renderStatus(data.online, data.connectedTo, data.pid))
+                        .catch(err => {
+                            console.error('Status fetch failed:', err);
+                            renderStatus(false, null, 0);
+                        });
+                }
+            });
         }, 2500);
 
-        fetchStatus()
-            .then(data => renderStatus(data.online, data.connectedTo, data.pid))
-            .catch(err => {
-                console.error('Initial status fetch failed:', err);
-                renderStatus(false, null, 0);
+        document.addEventListener('DOMContentLoaded', function () {
+            checkSession().then(authenticated => {
+                if (authenticated) {
+                    fetchStatus()
+                        .then(data => renderStatus(data.online, data.connectedTo, data.pid))
+                        .catch(err => {
+                            console.error('Initial status fetch failed:', err);
+                            renderStatus(false, null, 0);
+                        });
+                }
             });
-
+        });
 
         $$('.tabs button').forEach(btn => {
             btn.addEventListener('click', () => {
@@ -864,7 +943,6 @@
                 document.getElementById(btn.dataset.tab).classList.add('active');
             });
         });
-
 
         let emulatorArch = '32-Bit';
         function setEmulatorArch(arch) {
@@ -893,7 +971,6 @@
                     const parentTitle = comboRoot.closest('.panel')?.querySelector('.title')?.textContent?.trim();
                     if (parentTitle === 'Aimbot Mode') {
                         log(`Aimbot Mode >> ${opt.textContent.trim()}`, 'ok');
-                        // Update aimbot switch buttons when mode changes
                         if (typeof updateAimbotSwitchButtons === 'function') {
                             setTimeout(updateAimbotSwitchButtons, 10);
                         }
@@ -921,12 +998,10 @@
                 const selectedValue = selectedOption.getAttribute('data-value');
                 const commandPrefix = aimbotCommandMap[selectedValue] || 'aimbothead';
 
-                // Update the data-cmd attributes
                 aimbotOnBtn.setAttribute('data-cmd', commandPrefix + 'on');
                 aimbotOffBtn.setAttribute('data-cmd', commandPrefix + 'off');
             }
         }
-
 
         updateAimbotSwitchButtons();
 
@@ -935,7 +1010,6 @@
             inputDevice = next;
             $$('#input-device-seg button').forEach(b => b.classList.toggle('active', b.dataset.type === inputDevice));
             renderAllHotkeyMenus();
-            //log(`Hotkey input device: ${inputDevice}`, 'ok');
         }
         $$('#input-device-seg button').forEach(b => {
             b.addEventListener('click', () => setInputDevice(b.dataset.type || 'keyboard'));
@@ -1038,8 +1112,7 @@
 
         ['clear-log', 'console-clear'].forEach(id => { const el = document.getElementById(id); if (el) el.addEventListener('click', () => { logEl.innerHTML = ''; }); });
 
-        //log('Connected to BRUUUH SERVER', 'ok');
+        log('Connected to BRUUUH SERVER', 'ok');
     </script>
-
 </body>
 </html>

@@ -33,7 +33,7 @@ namespace Aimbot.Mem
                     return name;
                 }
             }
-            MessageBox.Show("No supported emulator process is running.", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+            //MessageBox.Show("No supported emulator process is running.", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
             return null;
         }
 

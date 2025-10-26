@@ -131,5 +131,8 @@
     <EmbeddedResource Include="Properties\MapHdr.dll" />
     <EmbeddedResource Include="Properties\transparent.dll" />
   </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="Properties\login.html" />
+  </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>

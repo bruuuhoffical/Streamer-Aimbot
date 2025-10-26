@@ -1,0 +1,445 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>BRUUUH CHEATS - Login</title>
+    <style>
+        :root {
+            --bg1: #0b0f1a;
+            --bg2: #12172a;
+            --glass: rgba(255,255,255,.06);
+            --stroke: rgba(255,255,255,.10);
+            --grad1: #8b5cf6;
+            --grad2: #22d3ee;
+            --text: #e5e7eb;
+            --muted: #9ca3af;
+            --accent: #7c3aed;
+            --ok: #10b981;
+            --warn: #f59e0b;
+            --err: #ef4444;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Poppins', sans-serif;
+        }
+
+        body {
+            background: radial-gradient(900px 600px at 110% -10%, rgba(34,211,238,.20), transparent 60%), radial-gradient(900px 600px at -10% 110%, rgba(139,92,246,.20), transparent 60%), linear-gradient(135deg, var(--bg1), var(--bg2));
+            color: var(--text);
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 20px;
+        }
+
+        .login-container {
+            width: 100%;
+            max-width: 400px;
+        }
+
+        .login-card {
+            background: linear-gradient(180deg, var(--glass), rgba(255,255,255,.03));
+            border: 1px solid var(--stroke);
+            border-radius: 16px;
+            padding: 30px;
+            box-shadow: 0 12px 32px rgba(0,0,0,.35);
+            backdrop-filter: blur(10px);
+        }
+
+        .brand {
+            text-align: center;
+            margin-bottom: 30px;
+        }
+
+        .brand-logo {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 12px;
+            margin-bottom: 8px;
+        }
+
+        .dot {
+            width: 12px;
+            height: 12px;
+            border-radius: 50%;
+            background: linear-gradient(45deg, var(--grad1), var(--grad2));
+            box-shadow: 0 0 22px rgba(139,92,246,.7);
+        }
+
+        .brand h1 {
+            font-size: 24px;
+            font-weight: 600;
+            background: linear-gradient(45deg, var(--grad1), var(--grad2));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        .brand p {
+            color: var(--muted);
+            font-size: 14px;
+        }
+
+        .form-group {
+            margin-bottom: 20px;
+        }
+
+            .form-group label {
+                display: block;
+                margin-bottom: 8px;
+                font-weight: 500;
+                color: var(--text);
+            }
+
+        .form-control {
+            width: 100%;
+            padding: 12px 16px;
+            background: rgba(0,0,0,.2);
+            border: 1px solid var(--stroke);
+            border-radius: 8px;
+            color: var(--text);
+            font-size: 14px;
+            transition: all 0.3s ease;
+        }
+
+            .form-control:focus {
+                outline: none;
+                border-color: var(--grad1);
+                box-shadow: 0 0 0 2px rgba(139,92,246,.2);
+            }
+
+        .btn {
+            width: 100%;
+            padding: 12px;
+            background: linear-gradient(45deg, var(--grad1), var(--grad2));
+            border: none;
+            border-radius: 8px;
+            color: white;
+            font-weight: 600;
+            font-size: 14px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            margin-bottom: 15px;
+        }
+
+            .btn:hover {
+                transform: translateY(-2px);
+                box-shadow: 0 8px 20px rgba(139,92,246,.3);
+            }
+
+            .btn:active {
+                transform: translateY(0);
+            }
+
+        .btn-ghost {
+            background: transparent;
+            border: 1px solid var(--stroke);
+            color: var(--muted);
+        }
+
+            .btn-ghost:hover {
+                background: rgba(255,255,255,.05);
+                box-shadow: none;
+                transform: none;
+            }
+
+        .remember-me {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            margin-bottom: 20px;
+            font-size: 14px;
+        }
+
+            .remember-me input {
+                accent-color: var(--grad1);
+            }
+
+        .message {
+            padding: 12px;
+            border-radius: 8px;
+            margin-bottom: 20px;
+            font-size: 14px;
+            text-align: center;
+            display: none;
+        }
+
+            .message.success {
+                background: rgba(16,185,129,.1);
+                border: 1px solid var(--ok);
+                color: var(--ok);
+                display: block;
+            }
+
+            .message.error {
+                background: rgba(239,68,68,.1);
+                border: 1px solid var(--err);
+                color: var(--err);
+                display: block;
+            }
+
+            .message.warning {
+                background: rgba(245,158,11,.1);
+                border: 1px solid var(--warn);
+                color: var(--warn);
+                display: block;
+            }
+
+        .loading {
+            display: none;
+            text-align: center;
+            margin-bottom: 20px;
+        }
+
+        .spinner {
+            width: 20px;
+            height: 20px;
+            border: 2px solid rgba(255,255,255,.3);
+            border-radius: 50%;
+            border-top-color: var(--grad1);
+            animation: spin 1s ease-in-out infinite;
+            display: inline-block;
+            margin-right: 10px;
+        }
+
+        @keyframes spin {
+            to {
+                transform: rotate(360deg);
+            }
+        }
+
+        .footer {
+            text-align: center;
+            margin-top: 20px;
+            color: var(--muted);
+            font-size: 12px;
+        }
+
+        .auto-login-notice {
+            background: rgba(245,158,11,.1);
+            border: 1px solid var(--warn);
+            color: var(--warn);
+            padding: 10px;
+            border-radius: 8px;
+            margin-bottom: 15px;
+            font-size: 13px;
+            text-align: center;
+            display: none;
+        }
+    </style>
+</head>
+<body>
+    <div class="login-container">
+        <div class="login-card">
+            <div class="brand">
+                <div class="brand-logo">
+                    <div class="dot"></div>
+                    <h1>BRUUUH CHEATS</h1>
+                </div>
+                <p>Streamers Choice Version 3.1</p>
+            </div>
+
+            <div class="auto-login-notice" id="auto-login-notice">
+                Attempting auto-login with saved credentials...
+            </div>
+
+            <div class="message" id="message"></div>
+
+            <div class="loading" id="loading">
+                <div class="spinner"></div>
+                Authenticating...
+            </div>
+
+            <form id="login-form">
+                <div class="form-group">
+                    <label for="username">Username</label>
+                    <input type="text" id="username" class="form-control" placeholder="Enter your username" required>
+                </div>
+
+                <div class="form-group">
+                    <label for="password">Password</label>
+                    <input type="password" id="password" class="form-control" placeholder="Enter your password" required>
+                </div>
+
+                <div class="remember-me">
+                    <input type="checkbox" id="remember-me">
+                    <label for="remember-me">Remember me</label>
+                </div>
+
+                <button type="submit" class="btn" id="login-btn">Login</button>
+            </form>
+
+            <div class="footer">
+                <p>Need help? Contact support</p>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        const loginForm = document.getElementById('login-form');
+        const usernameInput = document.getElementById('username');
+        const passwordInput = document.getElementById('password');
+        const rememberMeCheckbox = document.getElementById('remember-me');
+        const messageDiv = document.getElementById('message');
+        const loadingDiv = document.getElementById('loading');
+        const loginBtn = document.getElementById('login-btn');
+        const autoLoginNotice = document.getElementById('auto-login-notice');
+
+        function showMessage(text, type) {
+            messageDiv.textContent = text;
+            messageDiv.className = 'message ' + type;
+            messageDiv.style.display = 'block';
+        }
+
+        function hideMessage() {
+            messageDiv.style.display = 'none';
+        }
+
+        function showLoading() {
+            loadingDiv.style.display = 'block';
+            loginBtn.disabled = true;
+        }
+
+        function hideLoading() {
+            loadingDiv.style.display = 'none';
+            loginBtn.disabled = false;
+        }
+
+        async function checkSession() {
+            try {
+                const response = await fetch('/session', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    }
+                });
+
+                const data = await response.json();
+
+                if (data.active) {
+                    window.location.href = '/main';
+                    return true;
+                }
+
+                return false;
+            } catch (error) {
+                console.error('Session check failed:', error);
+                return false;
+            }
+        }
+
+
+        async function attemptAutoLogin() {
+            const savedUsername = localStorage.getItem('bruuuh_username');
+            const savedPassword = localStorage.getItem('bruuuh_password');
+
+            if (savedUsername && savedPassword) {
+                autoLoginNotice.style.display = 'block';
+                showLoading();
+
+                try {
+                    const success = await performLogin(savedUsername, savedPassword, true);
+
+                    if (success) {
+                        showMessage('Auto-login successful!', 'success');
+                        setTimeout(() => {
+                            window.location.href = '/main';
+                        }, 1000);
+                        return true;
+                    } else {
+                        localStorage.removeItem('bruuuh_username');
+                        localStorage.removeItem('bruuuh_password');
+                        autoLoginNotice.style.display = 'none';
+                        hideLoading();
+                        showMessage('Auto-login failed. Please login manually.', 'warning');
+                    }
+                } catch (error) {
+                    autoLoginNotice.style.display = 'none';
+                    hideLoading();
+                    console.error('Auto-login error:', error);
+                }
+            }
+
+            return false;
+        }
+
+        async function performLogin(username, password, isAutoLogin = false) {
+            try {
+                const response = await fetch('/login', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify({
+                        username: username,
+                        password: password
+                    })
+                });
+
+                const data = await response.json();
+
+                if (data.success) {
+                    if (!isAutoLogin && rememberMeCheckbox.checked) {
+                        localStorage.setItem('bruuuh_username', username);
+                        localStorage.setItem('bruuuh_password', password);
+                    }
+
+                    return true;
+                } else {
+                    showMessage(data.message || 'Login failed. Please check your credentials.', 'error');
+                    return false;
+                }
+            } catch (error) {
+                showMessage('Network error. Please check your connection.', 'error');
+                return false;
+            }
+        }
+
+        loginForm.addEventListener('submit', async (e) => {
+            e.preventDefault();
+
+            const username = usernameInput.value.trim();
+            const password = passwordInput.value.trim();
+
+            if (!username || !password) {
+                showMessage('Please enter both username and password.', 'error');
+                return;
+            }
+
+            hideMessage();
+            showLoading();
+
+            const success = await performLogin(username, password);
+
+            if (success) {
+                showMessage('Login successful! Redirecting...', 'success');
+                setTimeout(() => {
+                    window.location.href = '/main';
+                }, 1000);
+            } else {
+                hideLoading();
+            }
+        });
+
+        async function initLoginPage() {
+            const hasActiveSession = await checkSession();
+
+            if (hasActiveSession) {
+                return;
+            }
+
+            setTimeout(async () => {
+                await attemptAutoLogin();
+            }, 500);
+        }
+
+        initLoginPage();
+    </script>
+</body>
+</html>
